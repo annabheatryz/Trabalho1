@@ -100,20 +100,23 @@ vector<Pokemon> sortearPokemons(const vector<Pokemon>& vetor_pokemons, int qtd_s
 int main() {
     vector<Pokemon> vetor_pokemons = carregarPokemons("pokemons.txt");
 
-    // sortear 3 pokemons para o jogador e 3 para a CPU
-    vector<Pokemon> pokemons_jogador = sortearPokemons(vetor_pokemons, 3);
-    vector<Pokemon> pokemons_cpu = sortearPokemons(vetor_pokemons, 3);
+    // Sorteia 6 Pokemons, sendo 3 para o jogador e 3 para a CPU
+    vector<Pokemon> pokemons_sorteados = sortearPokemons(vetor_pokemons, 6);
+
+    // Separar os 3 primeiros para o jogador e os 3 últimos para a CPU
+    vector<Pokemon> pokemons_jogador(pokemons_sorteados.begin(), pokemons_sorteados.begin() + 3);
+    vector<Pokemon> pokemons_cpu(pokemons_sorteados.begin() + 3, pokemons_sorteados.end());
 
     // Exibir pokemons sorteados para o jogador
     cout << "Pokemons do jogador: " << endl;
     for (const auto& p : pokemons_jogador) {
-        cout << p.nome << " - " << p.tipo1 << "/" << p.tipo2 << "- Nível: " << p.nivel << endl;
+        cout << p.getNome() << " - " << p.getTipo1() << "/" << p.getTipo2() << "- Nível: " << p.getNivel() << endl;
     }
 
     // Exibir pokemons sorteados para a pcu
     cout << "Pokemons da CPU: " << endl;
     for (const auto& p : pokemons_cpu) {
-        cout << p.nome << " - " << p.tipo1 << "/" << p.tipo2 << "- Nível: " << p.nivel << endl;
+        cout << p.getNome() << " - " << p.getTipo1() << "/" << p.getTipo2() << "- Nível: " << p.getNivel() << endl;
     }
 
     return 0;
