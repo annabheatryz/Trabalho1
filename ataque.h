@@ -2,9 +2,9 @@
 #define ATAQUE_H
 
 #include <iostream>
-//#include <pokemon.h>
 #include <vector>
 #include <string>
+#include "pokemon.h"
 
 using namespace std;
 
@@ -34,7 +34,11 @@ public:
 
     // Métodos para carregar os ataques e sortea-los para os pokemons
     vector<Ataque> carregarAtaques(const string& nome_arquivo);
-    //vector<Ataque> sortearAtaques(const vector<Ataques>& vetor_ataques, int qtd_ataques);
+    vector<Ataque> sortearAtaques(const vector<Ataque>& vetor_ataques, const Pokemon& pokemon, size_t qtd_ataques);
+    // Sobrecarga do operador "==" para comparar ataques com base no nome
+    bool operator==(const Ataque& outro) const {
+        return move == outro.move;  // Compara os nomes dos ataques
+    }
 };
 
 #endif

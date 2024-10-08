@@ -1,4 +1,5 @@
 #include "ataque.h"
+#include "pokemon.h"
 #include <fstream>
 #include <cstdlib>
 #include <ctime>
@@ -79,29 +80,32 @@ vector<Ataque> Ataque::carregarAtaques(const string& nome_arquivo) {
     return ataques;
 }
 
-int main() {
-    // Crie um objeto da classe Ataque
-    Ataque ataque;
+vector<Ataque> Ataque::sortearAtaques(const vector<Ataque>& vetor_ataques, const Pokemon& pokemon, size_t qtd_ataques) {
+    vector<Ataque> sorteados;
+    // Controle para evitar repetições
+    vector<bool> ataques_selecionados(vetor_ataques.size(), false);
 
-    // Carregue os ataques a partir do arquivo ataques.txt
-    vector<Ataque> lista_ataques = ataque.carregarAtaques("ataques.txt");
+    //  Define a semente para gerar números aleatórios
+    srand(time(0));
 
-    // Verifique se o arquivo foi carregado corretamente
-    if (lista_ataques.empty()) {
-        cerr << "Erro: Nenhum ataque foi carregado do arquivo." << endl;
-        return 1;  // Finaliza o programa com erro
+    while (sorteados.size() < qtd_ataques) {
+        // Gera um índice aleatório
+        int indice = rand() % vetor_ataques.size();
+        const Ataque& atq_sorteado = vetor_ataques[indice];
+
+        // Verifica se o ataque já foi sorteado
+        if (!ataques_selecionados[indice]) {
+
+            // Verifica se o ataque sorteado corresponde ao tipo "Normal" OU tipo1 OU tipo2 do pokemon
+            if (atq_sorteado.getTipo() == "Normal" || atq_sorteado.getTipo() == pokemon.getTipo1() || atq_sorteado.getTipo() == pokemon.getTipo2()) {
+                // Adiciona o ataque ao vetor de sorteados
+                sorteados.push_back(vetor_ataques[indice]);
+
+                // Marca o ataque como sorteado
+                ataques_selecionados[indice] = true;
+            }
+        }
     }
 
-    // Exibe os ataques carregados
-    cout << "Ataques carregados com sucesso:" << endl;
-    for (const Ataque& atq : lista_ataques) {
-        cout << "Move: " << atq.getMove()
-             << ", Categoria: " << atq.getCategoria()
-             << ", Poder: " << atq.getPoder()
-             << ", Precisao: " << atq.getPrecisao()
-             << ", Tipo: " << atq.getTipo()
-             << endl;
-    }
-
-    return 0;  // Finaliza o programa com sucesso
+    return sorteados;
 }

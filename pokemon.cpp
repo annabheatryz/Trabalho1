@@ -33,7 +33,7 @@ void Pokemon::setAtaqueEspecial(int atq_especial) {ataque_especial = atq_especia
 void Pokemon::setDefesaEspecial(int dfs_especial) {defesa_especial = dfs_especial;}
 
 // Métodos para carregar e sortear os pokemons do arquivo txt
-vector<Pokemon> carregarPokemons(const string& nome_arquivo) {
+vector<Pokemon> Pokemon::carregarPokemons(const string& nome_arquivo) {
     vector<Pokemon> pokemons;
     ifstream arquivo(nome_arquivo);
 
@@ -75,7 +75,7 @@ vector<Pokemon> carregarPokemons(const string& nome_arquivo) {
     return pokemons;
 }
 
-vector<Pokemon> sortearPokemons(const vector<Pokemon>& vetor_pokemons, int qtd_sorteio) {
+vector<Pokemon> Pokemon::sortearPokemons(const vector<Pokemon>& vetor_pokemons, size_t qtd_sorteio) {
     vector<Pokemon> sorteados;
     // Controle para evitar repetições
     vector<bool> pokemons_selecionados(vetor_pokemons.size(), false);
@@ -97,27 +97,3 @@ vector<Pokemon> sortearPokemons(const vector<Pokemon>& vetor_pokemons, int qtd_s
     return sorteados;
 }
 
-int main() {
-    vector<Pokemon> vetor_pokemons = carregarPokemons("pokemons.txt");
-
-    // Sorteia 6 Pokemons, sendo 3 para o jogador e 3 para a CPU
-    vector<Pokemon> pokemons_sorteados = sortearPokemons(vetor_pokemons, 6);
-
-    // Separar os 3 primeiros para o jogador e os 3 últimos para a CPU
-    vector<Pokemon> pokemons_jogador(pokemons_sorteados.begin(), pokemons_sorteados.begin() + 3);
-    vector<Pokemon> pokemons_cpu(pokemons_sorteados.begin() + 3, pokemons_sorteados.end());
-
-    // Exibir pokemons sorteados para o jogador
-    cout << "Pokemons do jogador: " << endl;
-    for (const auto& p : pokemons_jogador) {
-        cout << p.getNome() << " - " << p.getTipo1() << "/" << p.getTipo2() << "- Nível: " << p.getNivel() << endl;
-    }
-
-    // Exibir pokemons sorteados para a pcu
-    cout << "Pokemons da CPU: " << endl;
-    for (const auto& p : pokemons_cpu) {
-        cout << p.getNome() << " - " << p.getTipo1() << "/" << p.getTipo2() << "- Nível: " << p.getNivel() << endl;
-    }
-
-    return 0;
-}

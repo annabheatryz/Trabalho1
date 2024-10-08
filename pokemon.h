@@ -42,7 +42,7 @@ public:
 
     // Métodos para carregar e sortear os pokemons do arquivo txt
     vector<Pokemon> carregarPokemons(const string& nome_arquivo);
-    vector<Pokemon> sortearPokemons(const vector<Pokemon>& vetor_pokemons, int qtd_sorteio);
+    vector<Pokemon> sortearPokemons(const vector<Pokemon>& vetor_pokemons, size_t qtd_sorteio);
 
 };
 
