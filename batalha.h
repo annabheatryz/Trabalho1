@@ -16,17 +16,16 @@ private:
     int pokemon_cpu_atual;
 
 public:
-    // Construtor sem parâmetros
+    // Construtores
     Batalha();
-    // Construtor com parâmetros
     Batalha(const vector<Pokemon>& pk_jogador, const vector<Pokemon>& pk_cpu, int atual_jogador, int atual_cpu);
 
-    // Método que implementam o fluxo da batalha
-    void escolherPokemon(int novo_pokemon);
-    void iniciar();
-    void atacar(int atq_escolhido);
-    void mostrarStatus();
-    int calcularDano(const Ataque& ataque, const Pokemon& atacante, const Pokemon& defensor);
+    // Funções que implementam o fluxo da batalha
+    void escolherPokemon();
+    // void iniciar();
+    // void atacar(int atq_escolhido);
+    // void mostrarStatus();
+    // int calcularDano(const Ataque& ataque, const Pokemon& atacante, const Pokemon& defensor);
 };
 
 #endif

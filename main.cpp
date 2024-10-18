@@ -1,5 +1,6 @@
 #include "pokemon.h"
 #include "ataque.h"
+#include "batalha.h"
 #include <iostream>
 #include <vector>
 
@@ -8,6 +9,7 @@ using namespace std;
 int main() {
     Pokemon pokemon;
     Ataque ataque;
+
     // Carregar lista de Pokemons e Ataques
     vector<Pokemon> vetor_pokemons = pokemon.carregarPokemons("pokemons.txt");
     vector<Ataque> lista_ataques = ataque.carregarAtaques("ataques.txt");
@@ -56,6 +58,15 @@ int main() {
         }
         cout << endl;
     }
+    Batalha batalha(pokemons_jogador, pokemons_cpu, 0, 0);
+
+    cout << "Escolha um Pokémon para começar a batalha:\n";
+    for (size_t i = 0; i < pokemons_jogador.size(); i++) {
+        cout << i << ": " << pokemons_jogador[i].getNome() << " (HP: " << pokemons_jogador[i].getHP() << ")\n";
+    }
+
+    // Testando a função escolherPokemon
+    batalha.escolherPokemon();
 
     return 0;
 }
