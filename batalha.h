@@ -15,6 +15,11 @@ private:
     int pokemon_jogador_atual;
     int pokemon_cpu_atual;
 
+    bool fimDejogo;
+
+    bool sorteioCritico();
+    void turnoCPU();
+
 public:
     // Construtores
     Batalha();
@@ -22,10 +27,11 @@ public:
 
     // Funções que implementam o fluxo da batalha
     void escolherPokemon();
-    // void iniciar();
-    // void atacar(int atq_escolhido);
-    // void mostrarStatus();
-    // int calcularDano(const Ataque& ataque, const Pokemon& atacante, const Pokemon& defensor);
+    void iniciar();
+    void atacar(int atq_escolhido);
+    Ataque escolherAtaque(const Pokemon& atacante, int ataqueEscolhido);
+    void mostrarStatus();
+    int calcularDano(const Ataque& ataque, const Pokemon& atacante, const Pokemon& defensor);
 };
 
 #endif

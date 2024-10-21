@@ -24,7 +24,7 @@ pokemon.o: pokemon.cpp pokemon.h
 ataque.o: ataque.cpp ataque.h
 	$(CXX) $(CXXFLAGS) -c ataque.cpp
 
-ataque.o: batalha.cpp batalha.h
+batalha.o: batalha.cpp batalha.h
 	$(CXX) $(CXXFLAGS) -c batalha.cpp
 
 # Limpeza dos arquivos temporários
