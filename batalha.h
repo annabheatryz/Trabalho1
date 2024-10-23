@@ -28,8 +28,8 @@ public:
     // Funções que implementam o fluxo da batalha
     void escolherPokemon();
     void iniciar();
-    void atacar(int atq_escolhido);
-    Ataque escolherAtaque(const Pokemon& atacante, int ataqueEscolhido);
+    void atacar(int ataqueEscolhido);
+    Ataque escolherAtaque(const vector<Ataque>& ataques, int ataqueEscolhido);
     void mostrarStatus();
     int calcularDano(const Ataque& ataque, const Pokemon& atacante, const Pokemon& defensor);
 };
