@@ -80,7 +80,7 @@ void Batalha::iniciar() {
             escolherPokemon();  // Troca o Pokémon ativo.
         }
 
-        turnoCPU();  // CPU realiza sua ação.
+        //turnoCPU();  // CPU realiza sua ação.
         mostrarStatus();  // Exibe o status após cada turno.
 
         // Verifica se o jogo acabou (todos os Pokémon de um jogador estão desmaiados).
@@ -94,19 +94,18 @@ void Batalha::iniciar() {
     }
 }
 
-// Função que controla o turno da CPU.
-void Batalha::turnoCPU() {
-    Pokemon &atacante = pokemons_cpu[pokemon_cpu_atual];  // Pokémon da CPU.
-    Pokemon &defensor = pokemons_jogador[pokemon_jogador_atual];  // Pokémon do jogador.
+// // Função que controla o turno da CPU.
+// void Batalha::turnoCPU() {
+//     Pokemon &atacante = pokemons_cpu[pokemon_cpu_atual];  // Pokémon da CPU.
+//     Pokemon &defensor = pokemons_jogador[pokemon_jogador_atual];  // Pokémon do jogador.
+//     const vector<Ataque>& ataquesCPU = atacante.getAtaque(); // Ataques da CPU.
 
-    Ataque ataque = escolherAtaque(atacante);  // A CPU escolhe um ataque.
+//     // Escolher um ataque da CPU (pode ser aleatório ou estratégico, dependendo da dificuldade).
+//     int ataqueEscolhido = escolherAtaque(ataquesCPU, );
 
-    // Calcula o dano e reduz o HP do Pokémon do jogador.
-    int dano = calcularDano(ataque, atacante, defensor);
-    defensor.reduzirHP(dano);
-
-    cout << atacante.getNome() << " causou " << dano << " de dano!\n";
-}
+//     // Executar o ataque e mostrar os HPs após a ação.
+//     atacar(atacante, defensor, ataquesCPU, ataqueEscolhido);
+// }
 
 // Função que calcula o dano causado por um ataque.
 int Batalha::calcularDano(const Ataque& ataque, const Pokemon& atacante, const Pokemon& defensor) {
@@ -137,21 +136,33 @@ int Batalha::calcularDano(const Ataque& ataque, const Pokemon& atacante, const P
 }
 
 // Função que escolhe um ataque para a CPU ou o jogador.
-Ataque Batalha::escolherAtaque(const Pokemon& atacante, int ataqueEscolhido) {
-    return atacante.getAtaque(ataqueEscolhido);  // Retorna o ataque baseado no índice.
+Ataque Batalha::escolherAtaque(const vector<Ataque>& ataques, int ataqueEscolhido) {
+    if (ataqueEscolhido >= 0 && ataqueEscolhido < static_cast<int>(ataques.size())) {
+        return ataques[ataqueEscolhido];  // Retorna o ataque correspondente.
+    } else {
+        throw std::out_of_range("Índice de ataque inválido.");
+    }
 }
+
 
 // Função para o jogador realizar um ataque.
 void Batalha::atacar(int ataqueEscolhido) {
-    Pokemon &atacante = pokemons_jogador[pokemon_jogador_atual];
-    Pokemon &defensor = pokemons_cpu[pokemon_cpu_atual];
+    const Pokemon& atacante, defensor;
+    const vector<Ataque>& ataquesAtacante
+    
+    // Escolher o ataque com base no índice fornecido.
+    Ataque ataque = escolherAtaque(ataquesAtacante, ataqueEscolhido);
 
-    Ataque ataque = escolherAtaque(atacante, ataqueEscolhido);  // Escolhe o ataque.
+    // Calcular o dano e aplicar ao defensor.
+    int dano = calcularDano(ataque, atacante, defensor);
+    defensor.setHP(defensor.getHP() - dano);
 
-    int dano = calcularDano(ataque, atacante, defensor);  // Calcula o dano.
-    defensor.reduzirHP(dano);  // Reduz o HP do defensor.
+    // Exibir mensagem do ataque.
+    std::cout << atacante.getNome() << " usou " << ataque.getMove() 
+              << " e causou " << dano << " de dano!\n";
 
-    cout << atacante.getNome() << " causou " << dano << " de dano!\n";
+    // Exibir o status do HP de ambos os Pokémons.
+    mostrarStatus();
 }
 
 // Função que decide se o ataque é crítico (chance de 1/16).
