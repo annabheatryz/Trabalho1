@@ -1,5 +1,4 @@
 #include "ataque.h"
-#include "pokemon.h"
 #include <fstream>
 #include <cstdlib>
 #include <ctime>
@@ -10,15 +9,15 @@
 using namespace std;
 
 // Construtor padrão
-Ataque::Ataque() : move(""), categoria(""), poder(0), precisao(0.0), tipo("") {}
+Ataque::Ataque() : move(""), fisico(false), poder(0), precisao(0.0), tipo("") {}
 
 // Construtor com parâmetros
-Ataque::Ataque(const string& mv, const string& c, int pw, float pc, const string& t)
-    : move(mv), categoria(c), poder(pw), precisao(pc), tipo(t) {}
+Ataque::Ataque(const string& mv, bool f, int pw, float pc, const string& t)
+    : move(mv), fisico(f), poder(pw), precisao(pc), tipo(t) {}
 
 // Getters
 string Ataque::getMove() const { return move; }
-string Ataque::getCategoria() const { return categoria; }
+bool Ataque::isFisico() const { return fisico; }
 string Ataque::getTipo() const { return tipo; }
 int Ataque::getPoder() const { return poder; }
 float Ataque::getPrecisao() const { return precisao; }
@@ -27,85 +26,19 @@ float Ataque::getPrecisao() const { return precisao; }
 void Ataque::setPoder(int pw) { poder = pw; }
 void Ataque::setPrecisao(float pc) { precisao = pc; }
 
-// Método para carregar ataques de um arquivo
-vector<Ataque> Ataque::carregarAtaques(const string& nome_arquivo) {
-    vector<Ataque> ataques;
-    ifstream arquivo(nome_arquivo);
-
-    if (!arquivo.is_open()) {
-        cerr << "Erro ao abrir o arquivo!" << endl;
-        return ataques;  // Retorna o vetor vazio em caso de erro
+// Método para verificar se o ataque acertou
+bool Ataque::acertou() {
+    // Gera um número aleatório entre 0 e 1
+    float chance = static_cast<float>(rand()) / RAND_MAX;
+    
+    // Verifica se o número gerado é menor ou igual à precisão
+    if (chance <= precisao) {
+        return true;  // O ataque acertou
+    } else {
+        return false;  // O ataque errou
     }
-
-    string linha;
-    // Ignora a primeira linha (cabeçalho)
-    getline(arquivo, linha);
-
-    // Variáveis temporárias para armazenar os dados lidos
-    string move, categoria, tipo;
-    int poder;
-    float precisao;
-
-    // Ler as demais linhas do CSV
-    while (getline(arquivo, linha)) {
-        stringstream linha_stream(linha);
-        string temp;
-
-        try {
-            // Leitura dos campos separados por vírgulas
-            getline(linha_stream, move, ',');
-            getline(linha_stream, categoria, ',');
-            
-            // Converte a string para inteiro (poder)
-            getline(linha_stream, temp, ',');
-            poder = stoi(temp);
-
-            // Converte a string para float (precisão)
-            getline(linha_stream, temp, ',');
-            precisao = stof(temp);
-            
-            // Leitura do tipo
-            getline(linha_stream, tipo, ',');
-
-            // Adiciona o ataque ao vetor
-            ataques.emplace_back(move, categoria, poder, precisao, tipo);
-
-        } catch (const invalid_argument& e) {
-            cerr << "Erro de conversão na linha: " << linha << endl;
-            cerr << "Detalhes: " << e.what() << endl;
-        }
-    }
-
-    arquivo.close();
-    return ataques;
 }
-
-vector<Ataque> Ataque::sortearAtaques(const vector<Ataque>& vetor_ataques, const Pokemon& pokemon, size_t qtd_ataques) {
-    vector<Ataque> sorteados;
-    // Controle para evitar repetições
-    vector<bool> ataques_selecionados(vetor_ataques.size(), false);
-
-    //  Define a semente para gerar números aleatórios
-    srand(time(0));
-
-    while (sorteados.size() < qtd_ataques) {
-        // Gera um índice aleatório
-        int indice = rand() % vetor_ataques.size();
-        const Ataque& atq_sorteado = vetor_ataques[indice];
-
-        // Verifica se o ataque já foi sorteado
-        if (!ataques_selecionados[indice]) {
-
-            // Verifica se o ataque sorteado corresponde ao tipo "Normal" OU tipo1 OU tipo2 do pokemon
-            if (atq_sorteado.getTipo() == "Normal" || atq_sorteado.getTipo() == pokemon.getTipo1() || atq_sorteado.getTipo() == pokemon.getTipo2()) {
-                // Adiciona o ataque ao vetor de sorteados
-                sorteados.push_back(vetor_ataques[indice]);
-
-                // Marca o ataque como sorteado
-                ataques_selecionados[indice] = true;
-            }
-        }
-    }
-
-    return sorteados;
+// Método para calcular o poder do ataque (retorna o poder base)
+int Ataque::calcularPoder() const {
+    return poder;  // Simplesmente retorna o poder base do ataque
 }

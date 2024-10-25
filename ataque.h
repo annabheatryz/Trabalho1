@@ -4,14 +4,14 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "pokemon.h"
+class Pokemon;
 
 using namespace std;
 
 class Ataque {
 private:
     string move;
-    string categoria;
+    bool fisico; //Indica se o ataque é fisico ou especial
     int poder;
     float precisao;
     string tipo;
@@ -19,11 +19,11 @@ public:
     // Construtor padrão
     Ataque();
     // Construtor com parâmetros
-    Ataque(const string& mv, const string& c, int pw, float pc, const string& t);
+    Ataque(const string& mv, bool f, int pw, float pc, const string& t);
 
     // Getters
     string getMove() const;
-    string getCategoria() const;
+    bool isFisico() const;
     string getTipo() const;
     int getPoder() const;
     float getPrecisao() const;
@@ -31,10 +31,8 @@ public:
     // Setters
     void setPoder(int pw);
     void setPrecisao(float pc);
-
-    // Métodos para carregar os ataques e sortea-los para os pokemons
-    vector<Ataque> carregarAtaques(const string& nome_arquivo);
-    vector<Ataque> sortearAtaques(const vector<Ataque>& vetor_ataques, const Pokemon& pokemon, size_t qtd_ataques);
+    bool acertou();
+    int calcularPoder() const;
     // Sobrecarga do operador "==" para comparar ataques com base no nome
     bool operator==(const Ataque& outro) const {
         return move == outro.move;  // Compara os nomes dos ataques
