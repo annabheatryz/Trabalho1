@@ -5,6 +5,10 @@ using namespace std;
 
 #include <vector>
 #include <string>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+
 #include "jogador.h"
 #include "batalha.h"
 #include "pokemon.h"
@@ -22,7 +26,7 @@ private:
     vector<Ataque> ataques;     // Vetor de Ataques
     vector<Jogador> jogadores;  // Lista de jogadores cadastrados
     Jogador cpu;                     // CPU controlada pelo jogo
-    Dificuldade dificuldade;         // Enum de dificuldade (FACIL, MEDIO, DIFICIL)
+    Dificuldade dificuldade;   // Enum de dificuldade (FACIL, MEDIO, DIFICIL)
 
 public:
     Jogo();                          // Construtor padrão

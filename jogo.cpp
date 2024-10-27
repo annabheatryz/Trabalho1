@@ -1,9 +1,9 @@
-#include "Jogo.h"
-#include <fstream>
-#include <sstream>
-#include <iostream>
+#include "jogo.h"
 
 using namespace std;
+
+// Vetor global de pokemons disponiveis
+vector<Pokemon> pokemonsDisponiveis;
 
 Jogo::Jogo() : dificuldade(FACIL) {   // Define a dificuldade padrão como FACIL
     carregarPokemons();
@@ -44,8 +44,10 @@ void Jogo::mostrarMenu() {
 }
 
 void Jogo::iniciarBatalha() {
+    const size_t qtd_pokemons = 3;
+
     Jogador jogador = selecionarJogador();
-    jogador.sortearPokemons();
+    jogador.sortearPokemons(pokemonsDisponiveis, qtd_pokemons);
     cpu.sortearPokemons();
 
     Batalha batalha(jogador, cpu, dificuldade);
@@ -121,7 +123,7 @@ void Jogo::carregarPokemons() {
         getline(linha_stream, temp, ','); ataque_especial = stoi(temp);
         getline(linha_stream, temp, ','); defesa_especial = stoi(temp);
 
-        pokemons.emplace_back(nome, tipo1, tipo2, hp, nivel, ataque, defesa, velocidade, ataque_especial, defesa_especial);
+        pokemonsDisponiveis.emplace_back(nome, tipo1, tipo2, hp, nivel, ataque, defesa, velocidade, ataque_especial, defesa_especial);
     }
 
     arquivo.close();

@@ -5,7 +5,7 @@
 
 //Construtor
 Jogador::Jogador(string nome) : nome(nome), vitorias(0), derrotas(0), pontuacao(0){ 
-         srand(time(0)); //inicializa o gerador de números aleatórios 
+    srand(time(0)); //inicializa o gerador de números aleatórios 
 }
 
 //Getters

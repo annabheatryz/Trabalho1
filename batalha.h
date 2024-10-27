@@ -3,35 +3,41 @@
 
 #include <iostream>
 #include <vector>
+#include "jogador.h"
 #include "pokemon.h"
 #include "ataque.h"
-
-using namespace std;
+#include "jogo.h"
 
 class Batalha {
 private:
-    vector<Pokemon> pokemons_jogador;
-    vector<Pokemon> pokemons_cpu;
-    int pokemon_jogador_atual;
-    int pokemon_cpu_atual;
-
-    bool fimDejogo;
-
-    bool sorteioCritico();
-    void turnoCPU();
+    Jogador& jogador;           // Referência ao jogador
+    Jogador& cpu;               // Referência à CPU (adversário)
+    Jogo::Dificuldade dificuldade;    // Nível de dificuldade da batalha
+    Pokemon* pokemonJogador;    // Pokémon atual do jogador
+    Pokemon* pokemonCPU;        // Pokémon atual da CPU
 
 public:
-    // Construtores
-    Batalha();
-    Batalha(const vector<Pokemon>& pk_jogador, const vector<Pokemon>& pk_cpu, int atual_jogador, int atual_cpu);
+    // Construtor
+    Batalha(Jogador& jogador, Jogador& cpu, Dificuldade dificuldade);
 
-    // Funções que implementam o fluxo da batalha
-    void escolherPokemon();
+private:
+    // Método para iniciar a batalha
     void iniciar();
-    void atacar(int ataqueEscolhido);
-    Ataque escolherAtaque(const vector<Ataque>& ataques, int ataqueEscolhido);
-    void mostrarStatus();
-    int calcularDano(const Ataque& ataque, const Pokemon& atacante, const Pokemon& defensor);
+    // Exibe o status dos Pokémon
+    void exibirStatus() const;
+
+    // Métodos para o turno de cada participante
+    void turnoJogador();
+    void turnoCPU();
+
+    // Calcula o dano de um ataque
+    int calcularDano(const Ataque& ataque, Pokemon* atacante, Pokemon* defensor);
+    
+    /*
+    // Estratégias de escolha de ataque para a CPU
+    Ataque escolherAtaqueFraco(Pokemon* pokemon);
+    Ataque escolherAtaqueForte(Pokemon* pokemon);
+    */
 };
 
-#endif
+#endif // BATALHA_H
