@@ -2,14 +2,15 @@
 
 using namespace std;
 
-// Vetor global de pokemons disponiveis
+// Vetor global de pokemons e ataques disponiveis
 vector<Pokemon> pokemonsDisponiveis;
-
+vector<Ataque> ataquesDisponiveis;
+ 
 Jogo::Jogo() : dificuldade(FACIL) {   // Define a dificuldade padrão como FACIL
     carregarPokemons();
     carregarAtaques();
 }
-
+/*
 void Jogo::mostrarMenu() {
     int opcao = 0;
     do {
@@ -48,12 +49,12 @@ void Jogo::iniciarBatalha() {
 
     Jogador jogador = selecionarJogador();
     jogador.sortearPokemons(pokemonsDisponiveis, qtd_pokemons);
-    cpu.sortearPokemons();
+    cpu.sortearPokemons(pokemonsDisponiveis, qtd_pokemons);
 
     Batalha batalha(jogador, cpu, dificuldade);
     batalha.iniciar();
 }
-
+*/
 void Jogo::ajustarDificuldade() {
     int escolha = 0;
     cout << "Selecione a dificuldade:\n";
@@ -79,26 +80,25 @@ void Jogo::ajustarDificuldade() {
             return;
     }
 
-    cout << "Dificuldade ajustada para " 
-              << (dificuldade == FACIL ? "Fácil" : dificuldade == MEDIO ? "Médio" : "Difícil") << "!\n";
+    cout << "Dificuldade ajustada para " << (dificuldade == FACIL ? "Fácil" : dificuldade == MEDIO ? "Médio" : "Difícil") << "!\n";
 }
 
 void Jogo::exibirRanking() {
     cout << "====== Ranking de Jogadores ======\n";
     for (const auto& jogador : jogadores) {
-        cout << "Jogador: " << jogador.getNome() 
-                  << " - Vitórias: " << jogador.getVitorias()
-                  << " - Derrotas: " << jogador.getDerrotas()
-                  << " - Pontuação: " << jogador.getPontuacao() << endl;
+        cout << "Jogador: " << jogador.getNome();
+        cout << " - Vitórias: " << jogador.getVitorias();
+        cout << " - Derrotas: " << jogador.getDerrotas();
+        cout << " - Pontuação: " << jogador.getPontuacao() << endl;
     }
 }
-
+/*
 void Jogo::salvarDados() {
     cout << "Dados salvos com sucesso!\n";
 }
-
+ */
 void Jogo::carregarPokemons() {
-    ifstream arquivo("pokemons.csv");
+    ifstream arquivo("pokemons.txt");
     if (!arquivo.is_open()) {
         cerr << "Erro ao abrir o arquivo de pokémons." << endl;
         return;
@@ -131,7 +131,7 @@ void Jogo::carregarPokemons() {
 }
 
 void Jogo::carregarAtaques() {
-     ifstream arquivo("ataques.csv");
+     ifstream arquivo("ataques.txt");
     if (!arquivo.is_open()) {
         cerr << "Erro ao abrir o arquivo de ataques." << endl;
         return;
@@ -168,7 +168,7 @@ void Jogo::carregarAtaques() {
             getline(linha_stream, tipo, ',');
 
             // Adiciona o ataque ao vetor
-            ataques.emplace_back(move, fisico, poder, precisao, tipo);
+            ataquesDisponiveis.emplace_back(move, fisico, poder, precisao, tipo);
         } catch (const invalid_argument& e) {
             cerr << "Erro de conversão na linha: " << linha << endl;
             cerr << "Detalhes: " << e.what() << endl;
@@ -181,13 +181,13 @@ void Jogo::carregarAtaques() {
 
 int main() {
     Jogo jogo;
-
+/* 
     // Teste 1: Carregar Pokémons
     cout << "Teste 1: Carregar Pokémons" << endl;
     jogo.carregarPokemons();  // Deve carregar os dados do arquivo e exibir uma mensagem de sucesso
     cout << "-------------------------------------\n";
 
-/* 
+ 
     // Teste 2: Carregar Ataques
     cout << "Teste 2: Carregar Ataques" << endl;
     jogo.carregarAtaques();   // Deve carregar os dados do arquivo e exibir uma mensagem de sucesso
@@ -197,18 +197,13 @@ int main() {
     cout << "Teste 3: Ajustar Dificuldade" << endl;
     jogo.ajustarDificuldade();  // Deve permitir ao usuário definir a dificuldade e confirmar o ajuste
     cout << "-------------------------------------\n";
-
-    // Teste 4: Selecionar Jogador
-    cout << "Teste 4: Selecionar Jogador" << endl;
-    auto jogador = jogo.selecionarJogador();  // Deve permitir ao usuário escolher ou criar um jogador
-    cout << "Jogador selecionado: " << jogador.getNome() << "\n";
-    cout << "-------------------------------------\n";
+*/
 
     // Teste 5: Exibir Ranking
     cout << "Teste 5: Exibir Ranking" << endl;
     jogo.exibirRanking();  // Deve exibir o ranking dos jogadores (ainda pode estar vazio)
     cout << "-------------------------------------\n";
-
+/*
     // Teste 6: Salvar Dados
     cout << "Teste 6: Salvar Dados" << endl;
     jogo.salvarDados();  // Deve exibir uma mensagem de que os dados foram salvos

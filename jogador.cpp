@@ -90,7 +90,7 @@ void Jogador::exibirPokemons() const{
         cout << i << ":" << pokemons[i].getNome() << " (HP: " << pokemons[i].getHP() << ")" << endl;
     }
 }
-
+/*
 int main() {
     // Criar jogadores
     Jogador jogador("Ash");
@@ -167,3 +167,4 @@ int main() {
 
     return 0;
 }
+ */
