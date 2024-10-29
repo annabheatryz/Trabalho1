@@ -12,8 +12,7 @@ using namespace std;
 Ataque::Ataque() : move(""), fisico(false), poder(0), precisao(0.0), tipo("") {}
 
 // Construtor com parâmetros
-Ataque::Ataque(const string& mv, bool f, int pw, float pc, const string& t)
-    : move(mv), fisico(f), poder(pw), precisao(pc), tipo(t) {}
+Ataque::Ataque(const string& mv, bool f, int pw, float pc, const string& t) : move(mv), fisico(f), poder(pw), precisao(pc), tipo(t) {}
 
 // Getters
 string Ataque::getMove() const { return move; }
@@ -28,8 +27,8 @@ void Ataque::setPrecisao(float pc) { precisao = pc; }
 
 // Método para verificar se o ataque acertou
 bool Ataque::acertou() {
-    // Gera um número aleatório entre 0 e 1
-    float chance = static_cast<float>(rand()) / RAND_MAX;
+    // Gera um número aleatório entre 1 e 100
+    int chance = rand() % 100 + 1;
     
     // Verifica se o número gerado é menor ou igual à precisão
     if (chance <= precisao) {
@@ -38,7 +37,15 @@ bool Ataque::acertou() {
         return false;  // O ataque errou
     }
 }
-// Método para calcular o poder do ataque (retorna o poder base)
-int Ataque::calcularPoder() const {
-    return poder;  // Simplesmente retorna o poder base do ataque
+
+int Ataque::calcularPoder(bool critico, float stab) const {
+    int poderFinal = poder;
+
+    if (critico) {
+        poderFinal *= 2;  // Golpe crítico dobra o poder
+    }
+
+    poderFinal = static_cast<int>(poderFinal * stab);  // Aplica STAB se houver
+
+    return poderFinal;
 }

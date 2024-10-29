@@ -30,12 +30,10 @@ public:
     // Setters
     void setPoder(int pw);
     void setPrecisao(float pc);
+
+    // Métodos
     bool acertou();
-    int calcularPoder() const;
-    // Sobrecarga do operador "==" para comparar ataques com base no nome
-    bool operator==(const Ataque& outro) const {
-        return move == outro.move;  // Compara os nomes dos ataques
-    }
+    int calcularPoder(bool critico, float stab) const;
 };
 
 #endif
