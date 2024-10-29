@@ -24,11 +24,11 @@ private:
 
 public:
     Jogo();                          // Construtor padrão
-   // void mostrarMenu();              // Exibe o menu principal do jogo
-   // void iniciarBatalha();           // Inicia uma batalha
+    void mostrarMenu();              // Exibe o menu principal do jogo
+    void iniciarBatalha();           // Inicia uma batalha
     void ajustarDificuldade();       // Ajusta a dificuldade do jogo
     void exibirRanking();            // Exibe o ranking dos jogadores
-   // void salvarDados();              // Salva os dados do jogo ao sair
+    void salvarDados();              // Salva os dados do jogo ao sair
     void carregarPokemons();         // Carrega os Pokémon de um arquivo CSV
     void carregarAtaques();          // Carrega os ataques de um arquivo CSV
 };
