@@ -42,7 +42,7 @@ Night Shade,Especial,70,1.0,Fantasma
 Outrage,Fisico,120,1.0,Dragao
 Pay Day,Fisico,40,1.0,Normal
 Peck,Fisico,35,1.0,Voador
-Play Rough,90,0.9,Fada
+Play Rough,Fisico,90,0.9,Fada
 Pin Missile,Fisico,25,0.95,Inseto
 Pound,Fisico,40,1.0,Normal
 Psybeam,Especial,65,1.0,Psiquico
