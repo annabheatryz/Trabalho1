@@ -10,15 +10,9 @@ using namespace std;
 #include <iostream>
 
 #include "jogador.h"
-//#include "batalha.h"
 #include "pokemon.h"
 #include "ataque.h"
-
-enum Dificuldade {
-    FACIL = 1,
-    MEDIO,
-    DIFICIL
-};
+#inlcude "dificuldade.h"
 
 class Jogo {
 private:
