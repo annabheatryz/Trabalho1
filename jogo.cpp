@@ -43,7 +43,7 @@ void Jogo::mostrarMenu() {
         }
     } while (opcao != 4);
 }
-
+*/
 void Jogo::iniciarBatalha() {
     const size_t qtd_pokemons = 3;
 
@@ -54,7 +54,7 @@ void Jogo::iniciarBatalha() {
     Batalha batalha(jogador, cpu, dificuldade);
     batalha.iniciar();
 }
-*/
+
 void Jogo::ajustarDificuldade() {
     int escolha = 0;
     cout << "Selecione a dificuldade:\n";
@@ -92,11 +92,11 @@ void Jogo::exibirRanking() {
         cout << " - Pontuação: " << jogador.getPontuacao() << endl;
     }
 }
-/*
+
 void Jogo::salvarDados() {
     cout << "Dados salvos com sucesso!\n";
 }
- */
+
 void Jogo::carregarPokemons() {
     ifstream arquivo("pokemons.txt");
     if (!arquivo.is_open()) {
@@ -203,12 +203,12 @@ int main() {
     cout << "Teste 5: Exibir Ranking" << endl;
     jogo.exibirRanking();  // Deve exibir o ranking dos jogadores (ainda pode estar vazio)
     cout << "-------------------------------------\n";
-/*
+
     // Teste 6: Salvar Dados
     cout << "Teste 6: Salvar Dados" << endl;
     jogo.salvarDados();  // Deve exibir uma mensagem de que os dados foram salvos
     cout << "-------------------------------------\n";
-
+/*
     // Teste 7: Iniciar Batalha
     cout << "Teste 7: Iniciar Batalha" << endl;
     jogo.iniciarBatalha();  // Deve iniciar uma batalha entre o jogador e a CPU
