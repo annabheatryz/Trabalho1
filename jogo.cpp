@@ -2,6 +2,14 @@
 
 using namespace std;
 
+const vector<Pokemon>& Jogo::getPokemonsDisponiveis() const {
+    return pokemonsDisponiveis;
+}
+
+const vector<Ataque>& Jogo::getAtaquesDisponiveis() const {
+    return ataquesDisponiveis;
+}
+
 Jogo::Jogo() : dificuldade(FACIL) {
     // Inicializa o gerador de números aleatórios
     srand(static_cast<unsigned>(time(0)));

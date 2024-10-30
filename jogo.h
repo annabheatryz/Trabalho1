@@ -27,6 +27,10 @@ private:
 public:
     Jogo();  // Construtor padrão
 
+    // Métodos de acesso aos vetores
+    const vector<Pokemon>& getPokemonsDisponiveis() const;
+    const vector<Ataque>& getAtaquesDisponiveis() const;
+
     // Funções principais do jogo
     void mostrarMenu();
     void iniciarBatalha(Jogador& jogador);
@@ -37,8 +41,6 @@ public:
     // Funções auxiliares para carregar dados
     void carregarPokemons();
     void carregarAtaques();
-
-private:
     void turnoJogador(Pokemon* atacante, Pokemon* defensor);
     void turnoCPU(Pokemon* atacante, Pokemon* defensor);
     void exibirStatus(const Pokemon* p1, const Pokemon* p2) const;
