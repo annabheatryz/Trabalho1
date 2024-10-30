@@ -1,36 +1,47 @@
 #ifndef JOGO_H
 #define JOGO_H
 
-using namespace std;
-
+#include <iostream>
 #include <vector>
 #include <string>
 #include <fstream>
 #include <sstream>
-#include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 #include "jogador.h"
 #include "pokemon.h"
 #include "ataque.h"
-#inlcude "dificuldade.h"
+#include "dificuldade.h"
+
+using namespace std;
 
 class Jogo {
 private:
-    vector<Pokemon> pokemons;   // Vetor de Pokémon
-    vector<Ataque> ataques;     // Vetor de Ataques
-    vector<Jogador> jogadores;  // Lista de jogadores cadastrados
-    Jogador cpu;                     // CPU controlada pelo jogo
-    Dificuldade dificuldade;   // Enum de dificuldade (FACIL, MEDIO, DIFICIL)
+    vector<Pokemon> pokemonsDisponiveis;  // Lista de Pokémon
+    vector<Ataque> ataquesDisponiveis;    // Lista de Ataques
+    vector<Jogador> jogadores;            // Jogadores cadastrados
+    Jogador cpu;                               // CPU controlada pelo jogo
+    Dificuldade dificuldade;                   // Enum de dificuldade
 
 public:
-    Jogo();                          // Construtor padrão
-    void mostrarMenu();              // Exibe o menu principal do jogo
-    void iniciarBatalha();           // Inicia uma batalha
-    void ajustarDificuldade();       // Ajusta a dificuldade do jogo
-    void exibirRanking();            // Exibe o ranking dos jogadores
-    void salvarDados();              // Salva os dados do jogo ao sair
-    void carregarPokemons();         // Carrega os Pokémon de um arquivo CSV
-    void carregarAtaques();          // Carrega os ataques de um arquivo CSV
+    Jogo();  // Construtor padrão
+
+    // Funções principais do jogo
+    void mostrarMenu();
+    void iniciarBatalha(Jogador& jogador);
+    void ajustarDificuldade();
+    void exibirRanking();
+    void salvarDados();
+
+    // Funções auxiliares para carregar dados
+    void carregarPokemons();
+    void carregarAtaques();
+
+private:
+    void turnoJogador(Pokemon* atacante, Pokemon* defensor);
+    void turnoCPU(Pokemon* atacante, Pokemon* defensor);
+    void exibirStatus(const Pokemon* p1, const Pokemon* p2) const;
 };
 
-#endif // JOGO_H
+#endif  // JOGO_H
