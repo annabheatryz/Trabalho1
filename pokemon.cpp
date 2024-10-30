@@ -4,6 +4,28 @@
 #include <ctime>
 #include <sstream>
 #include <iostream>
+#include <map>
+
+// Tabela de efetividade de tipos de Pokémon
+map<string, map<string, double>> efetividadeTabela = {
+    {"Normal", {{"Normal", 1}, {"Fogo", 1}, {"Agua", 1}, {"Elétrico", 1}, {"Grama", 1}, {"Gelo", 1}, {"Lutador", 1}, {"Venenoso", 1}, {"Terrestre", 1}, {"Voador", 1}, {"Psíquico", 1}, {"Inseto", 1}, {"Rocha", 0.5}, {"Fantasma", 0}, {"Dragão", 1}, {"Metal", 0.5}, {"Fada", 1}}},
+    {"Fogo", {{"Normal", 1}, {"Fogo", 0.5}, {"Agua", 0.5}, {"Elétrico", 1}, {"Grama", 2}, {"Gelo", 2}, {"Lutador", 1}, {"Venenoso", 1}, {"Terrestre", 1}, {"Voador", 1}, {"Psíquico", 1}, {"Inseto", 2}, {"Rocha", 0.5}, {"Fantasma", 1}, {"Dragão", 1}, {"Metal", 0.5}, {"Fada", 2}}},
+    {"Agua", {{"Normal", 1}, {"Fogo", 2}, {"Agua", 0.5}, {"Elétrico", 0.5}, {"Grama", 1}, {"Gelo", 1}, {"Lutador", 1}, {"Venenoso", 1}, {"Terrestre", 2}, {"Voador", 1}, {"Psíquico", 1}, {"Inseto", 1}, {"Rocha", 2}, {"Fantasma", 1}, {"Dragão", 0.5}, {"Metal", 1}, {"Fada", 1}}},
+    {"Elétrico", {{"Normal", 1}, {"Fogo", 1}, {"Agua", 2}, {"Elétrico", 0.5}, {"Grama", 0.5}, {"Gelo", 1}, {"Lutador", 1}, {"Venenoso", 1}, {"Terrestre", 0}, {"Voador", 1}, {"Psíquico", 1}, {"Inseto", 1}, {"Rocha", 1}, {"Fantasma", 1}, {"Dragão", 1}, {"Metal", 1}, {"Fada", 1}}},
+    {"Grama", {{"Normal", 1}, {"Fogo", 0.5}, {"Agua", 2}, {"Elétrico", 1}, {"Grama", 0.5}, {"Gelo", 1}, {"Lutador", 1}, {"Venenoso", 1}, {"Terrestre", 1}, {"Voador", 0.5}, {"Psíquico", 1}, {"Inseto", 1}, {"Rocha", 2}, {"Fantasma", 1}, {"Dragão", 1}, {"Metal", 1}, {"Fada", 1}}},
+    {"Gelo", {{"Normal", 1}, {"Fogo", 1}, {"Agua", 1}, {"Elétrico", 1}, {"Grama", 2}, {"Gelo", 0.5}, {"Lutador", 1}, {"Venenoso", 1}, {"Terrestre", 1}, {"Voador", 1}, {"Psíquico", 1}, {"Inseto", 1}, {"Rocha", 1}, {"Fantasma", 1}, {"Dragão", 2}, {"Metal", 1}, {"Fada", 1}}},
+    {"Lutador", {{"Normal", 2}, {"Fogo", 1}, {"Agua", 1}, {"Elétrico", 1}, {"Grama", 1}, {"Gelo", 2}, {"Lutador", 1}, {"Venenoso", 0.5}, {"Terrestre", 1}, {"Voador", 0.5}, {"Psíquico", 0.5}, {"Inseto", 1}, {"Rocha", 1}, {"Fantasma", 0}, {"Dragão", 1}, {"Metal", 1}, {"Fada", 0.5}}},
+    {"Venenoso", {{"Normal", 1}, {"Fogo", 1}, {"Agua", 1}, {"Elétrico", 1}, {"Grama", 2}, {"Gelo", 1}, {"Lutador", 1}, {"Venenoso", 1}, {"Terrestre", 0.5}, {"Voador", 1}, {"Psíquico", 1}, {"Inseto", 1}, {"Rocha", 1}, {"Fantasma", 1}, {"Dragão", 1}, {"Metal", 1}, {"Fada", 2}}},
+    {"Terrestre", {{"Normal", 1}, {"Fogo", 1}, {"Agua", 1}, {"Elétrico", 2}, {"Grama", 0.5}, {"Gelo", 1}, {"Lutador", 1}, {"Venenoso", 1}, {"Terrestre", 1}, {"Voador", 1}, {"Psíquico", 1}, {"Inseto", 1}, {"Rocha", 1}, {"Fantasma", 1}, {"Dragão", 1}, {"Metal", 1}, {"Fada", 1}}},
+    {"Voador", {{"Normal", 1}, {"Fogo", 1}, {"Agua", 1}, {"Elétrico", 1}, {"Grama", 2}, {"Gelo", 1}, {"Lutador", 1}, {"Venenoso", 1}, {"Terrestre", 1}, {"Voador", 1}, {"Psíquico", 1}, {"Inseto", 1}, {"Rocha", 0.5}, {"Fantasma", 1}, {"Dragão", 1}, {"Metal", 1}, {"Fada", 1}}},
+    {"Psíquico", {{"Normal", 1}, {"Fogo", 1}, {"Agua", 1}, {"Elétrico", 1}, {"Grama", 1}, {"Gelo", 1}, {"Lutador", 1}, {"Venenoso", 1}, {"Terrestre", 1}, {"Voador", 1}, {"Psíquico", 1}, {"Inseto", 1}, {"Rocha", 1}, {"Fantasma", 0.5}, {"Dragão", 1}, {"Metal", 1}, {"Fada", 1}}},
+    {"Inseto", {{"Normal", 1}, {"Fogo", 0.5}, {"Agua", 1}, {"Elétrico", 1}, {"Grama", 1}, {"Gelo", 1}, {"Lutador", 0.5}, {"Venenoso", 1}, {"Terrestre", 1}, {"Voador", 0.5}, {"Psíquico", 1}, {"Inseto", 1}, {"Rocha", 1}, {"Fantasma", 1}, {"Dragão", 1}, {"Metal", 1}, {"Fada", 0.5}}},
+    {"Rocha", {{"Normal", 1}, {"Fogo", 1}, {"Agua", 1}, {"Elétrico", 1}, {"Grama", 1}, {"Gelo", 1}, {"Lutador", 0.5}, {"Venenoso", 1}, {"Terrestre", 1}, {"Voador", 1}, {"Psíquico", 1}, {"Inseto", 1}, {"Rocha", 1}, {"Fantasma", 1}, {"Dragão", 1}, {"Metal", 1}, {"Fada", 1}}},
+    {"Fantasma", {{"Normal", 0}, {"Fogo", 1}, {"Agua", 1}, {"Elétrico", 1}, {"Grama", 1}, {"Gelo", 1}, {"Lutador", 1}, {"Venenoso", 1}, {"Terrestre", 1}, {"Voador", 1}, {"Psíquico", 1}, {"Inseto", 1}, {"Rocha", 1}, {"Fantasma", 1}, {"Dragão", 1}, {"Metal", 1}, {"Fada", 1}}},
+    {"Dragão", {{"Normal", 1}, {"Fogo", 1}, {"Agua", 1}, {"Elétrico", 1}, {"Grama", 1}, {"Gelo", 1}, {"Lutador", 1}, {"Venenoso", 1}, {"Terrestre", 1}, {"Voador", 1}, {"Psíquico", 1}, {"Inseto", 1}, {"Rocha", 1}, {"Fantasma", 1}, {"Dragão", 2}, {"Metal", 1}, {"Fada", 0.5}}},
+    {"Metal", {{"Normal", 1}, {"Fogo", 1}, {"Agua", 1}, {"Elétrico", 1}, {"Grama", 1}, {"Gelo", 1}, {"Lutador", 1}, {"Venenoso", 1}, {"Terrestre", 1}, {"Voador", 1}, {"Psíquico", 1}, {"Inseto", 1}, {"Rocha", 1}, {"Fantasma", 1}, {"Dragão", 1}, {"Metal", 0.5}, {"Fada", 2}}},
+    {"Fada", {{"Normal", 1}, {"Fogo", 1}, {"Agua", 1}, {"Elétrico", 1}, {"Grama", 1}, {"Gelo", 1}, {"Lutador", 1}, {"Venenoso", 1}, {"Terrestre", 1}, {"Voador", 1}, {"Psíquico", 1}, {"Inseto", 1}, {"Rocha", 1}, {"Fantasma", 1}, {"Dragão", 1}, {"Metal", 1}, {"Fada", 0.5}}}
+};
 
 // Construtor padrão
 Pokemon::Pokemon() : nome(""), tipo1(""), tipo2(""), hp(0), nivel(0), ataque(0), defesa(0), velocidade(0), ataque_especial(0), defesa_especial(0) {}
@@ -38,10 +60,8 @@ void Pokemon::sortearAtaques(const vector<Ataque>& vetor_ataques, size_t qtd_ata
 
     // Define a semente para gerar números aleatórios
     srand(time(0));
-    int tentativas = 0;  // Contador para tentativas de ataques compatíveis
-    const int max_tentativas = 100; // Limite de tentativas para evitar loops infinitos
 
-    while (sorteados.size() < qtd_ataques && tentativas < max_tentativas) {
+    while (sorteados.size() < qtd_ataques) {
         // Gera um índice aleatório
         int indice = rand() % vetor_ataques.size();
         const Ataque& atq_sorteado = vetor_ataques[indice];
@@ -57,20 +77,19 @@ void Pokemon::sortearAtaques(const vector<Ataque>& vetor_ataques, size_t qtd_ata
                 ataques_selecionados[indice] = true;
             }
         }
-        tentativas++;
     }
-     // Se ainda não completou os 4 ataques, sorteia mais ataques, independente do tipo
-    while(sorteados.size() < qtd_ataques){
-        int indice = rand() % vetor_ataques.size();
-        if(!ataques_selecionados[indice]);
-            //Adicionar ataque ao vetor de sorteados
-            sorteados.push_back(vetor_ataques[indice]);
-
-            ataques_selecionados[indice] = true;
-    }
-
     // Atualiza o vetor de ataques do Pokémon com os sorteados
     ataques = sorteados;
+}
+
+Ataque Pokemon::escolherAtaques(int indice) {
+    // Converte ataques.size() para int para evitar o aviso de comparação de tipos com sinais diferentes
+    if (indice >= 0 && indice < static_cast<int>(ataques.size())) {
+        return ataques[indice];
+    } else {
+        // Ajuste o construtor para os cinco parâmetros necessários
+        return Ataque("Ataque Inválido", false, 0, 0.0, "Normal");
+    }
 }
 
 void Pokemon::reduzirHP(int dano) {
@@ -93,24 +112,67 @@ void Pokemon::exibirAtaques() const {
     }
 }
 
-int Pokemon::calcularDano(const Ataque& ataque, const Pokemon& defensor) {
-    // Fórmula de dano base: ((2 * nível / 5 + 2) * poder * ataque / defesa) / 50 + 2
-    int danoBase = (((2 * nivel / 5 + 2) * ataque.getPoder() * ataque_especial) / defensor.getDefesaEspecial()) / 50 + 2;
+int Pokemon::calcularDano(Ataque& ataque, const Pokemon& defensor) {
+    // Verifica se o ataque acerta com base na precisão
+    float sorteioPrecisao = static_cast<float>(rand() % 100 + 1) / 100.0;
+    if (sorteioPrecisao > ataque.getPrecisao()) {
+        cout << "O ataque falhou!\n";
+        return 0;  // Ataque falhou
+    }
 
-    // Multiplicadores de tipo
-    float multiplicador = calcularMultiplicador(ataque, defensor);
+    int A, D;
 
-    // Fator aleatório entre 0.85 e 1.0
-    float random = (rand() % 16 + 85) / 100.0;
-    
-    // Dano final
-    int danoFinal = static_cast<int>(danoBase * multiplicador * random);
+    // Define stats de ataque e defesa com base no tipo do ataque
+    if (ataque.isFisico()) {
+        A = ataque.getPoder();
+        D = defensor.defesa;
+        cout << "Ataque físico: " << A << " vs Defesa física: " << D << endl;
+    } else {
+        A = ataque_especial;
+        D = defensor.defesa_especial;
+        cout << "Ataque especial: " << A << " vs Defesa especial: " << D << endl;
+    }
 
-    // Exibir o dano calculado
-    cout << nome << " usou " << ataque.getMove() << " e causou " << danoFinal << " de dano!\n";
+    if (A == 0) A = 10;
+    if (D == 0) D = 10;
 
-    return danoFinal;
+    // Fator crítico
+    float critico = (rand() % 16 == 0) ? 2 : 1;
+    if (critico == 2) cout << "Foi um golpe crítico!\n";
+
+    // Bônus de mesmo tipo
+    float stab = (ataque.getTipo() == tipo1 || ataque.getTipo() == tipo2) ? 1.5 : 1;
+    cout << "STAB: " << stab << endl;
+
+    // Efetividade do tipo contra os tipos do defensor
+    float tp1 = 1.0, tp2 = 1.0;
+    if (efetividadeTabela.find(ataque.getTipo()) != efetividadeTabela.end()) {
+        if (efetividadeTabela[ataque.getTipo()].find(defensor.getTipo1()) != efetividadeTabela[ataque.getTipo()].end()) {
+            tp1 = efetividadeTabela[ataque.getTipo()][defensor.getTipo1()];
+        }
+        if (defensor.getTipo2() != "Nenhum" && efetividadeTabela[ataque.getTipo()].find(defensor.getTipo2()) != efetividadeTabela[ataque.getTipo()].end()) {
+            tp2 = efetividadeTabela[ataque.getTipo()][defensor.getTipo2()];
+        }
+    }
+
+    cout << "Efetividade de tipo: tipo 1 = " << tp1 << ", tipo 2 = " << tp2 << endl;
+
+    if (tp1 == 0 || tp2 == 0) {
+        cout << "O ataque não é efetivo!\n";
+        return 0;
+    }
+
+    // Fator aleatório
+    float random = (rand() % (255 - 217 + 1) + 217) / 255.0;
+    cout << "Fator aleatório: " << random << endl;
+
+    // Cálculo final do dano
+    int dano = ((2 * nivel * ataque.getPoder() * A / D) / 50 + 2) * critico * stab * tp1 * tp2 * random;
+    cout << "Dano final causado: " << dano << endl;
+
+    return dano;
 }
+
 
 
 // Função para calcular multiplicadores (vantagem de tipos)
@@ -127,4 +189,63 @@ float Pokemon::calcularMultiplicador(const Ataque& ataque, const Pokemon& defens
     // Exibir o multiplicador
     cout << "Multiplicador de tipo: " << multiplicador << "\n";
     return multiplicador;
+}
+int main() {
+    // Criar uma lista de ataques disponíveis (pode vir de um arquivo, por exemplo)
+    vector<Ataque> listaAtaques = {
+        Ataque("Lança-chamas", false, 90, 1.0, "Fogo"),  // Ataque especial
+        Ataque("Ataque de Asa", true, 60, 1.0, "Voador"),  // Ataque físico
+        Ataque("Investida", true, 40, 1.0, "Normal"),  // Ataque físico
+        Ataque("Raio Solar", false, 120, 0.75, "Grama"),  // Ataque especial
+        Ataque("Terremoto", true, 100, 1.0, "Terrestre")  // Ataque físico
+    };
+
+    // Criar um Pokémon Charizard
+    Pokemon charizard("Charizard", "Fogo", "Voador", 180, 50, 84, 78, 100, 109, 85);
+    charizard.sortearAtaques(listaAtaques, 4);
+
+    // Criar um Pokémon Bulbasaur
+    Pokemon bulbasaur("Bulbasaur", "Grama", "Venenoso", 150, 50, 49, 49, 45, 65, 65);
+    bulbasaur.sortearAtaques(listaAtaques, 4);
+
+    // Loop de turnos da batalha
+    int turno = 1;
+    while (!charizard.estaDerrotado() && !bulbasaur.estaDerrotado()) {
+        cout << "\n--- Turno " << turno << " ---\n";
+
+        // Charizard ataca Bulbasaur com um ataque aleatório
+        int ataqueIndiceCharizard = rand() % 4;
+        Ataque ataqueCharizard = charizard.escolherAtaques(ataqueIndiceCharizard);
+        cout << charizard.getNome() << " usa " << ataqueCharizard.getMove() << "!\n";
+        int danoCharizard = charizard.calcularDano(ataqueCharizard, bulbasaur);
+        bulbasaur.reduzirHP(danoCharizard);
+
+        // Verificar se Bulbasaur foi derrotado
+        if (bulbasaur.estaDerrotado()) {
+            cout << bulbasaur.getNome() << " foi derrotado!\n";
+            break;
+        }
+
+        // Bulbasaur ataca Charizard com um ataque aleatório
+        int ataqueIndiceBulbasaur = rand() % 4;
+        Ataque ataqueBulbasaur = bulbasaur.escolherAtaques(ataqueIndiceBulbasaur);
+        cout << bulbasaur.getNome() << " usa " << ataqueBulbasaur.getMove() << "!\n";
+        int danoBulbasaur = bulbasaur.calcularDano(ataqueBulbasaur, charizard);
+        charizard.reduzirHP(danoBulbasaur);
+
+        // Verificar se Charizard foi derrotado
+        if (charizard.estaDerrotado()) {
+            cout << charizard.getNome() << " foi derrotado!\n";
+            break;
+        }
+
+        // Exibir o HP restante de ambos os Pokémon após o turno
+        cout << "HP de " << charizard.getNome() << ": " << charizard.getHP() << "\n";
+        cout << "HP de " << bulbasaur.getNome() << ": " << bulbasaur.getHP() << "\n";
+
+        turno++;
+    }
+
+    cout << "\n--- Fim da Batalha ---\n";
+    return 0;
 }
