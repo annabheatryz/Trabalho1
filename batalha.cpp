@@ -2,7 +2,6 @@
 
 using namespace std;
 
-
 // Construtor
 Batalha::Batalha(Jogador& jogador, Jogador& cpu, Dificuldade dificuldade)
     : jogador(jogador), cpu(cpu), dificuldade(dificuldade) {
@@ -11,43 +10,32 @@ Batalha::Batalha(Jogador& jogador, Jogador& cpu, Dificuldade dificuldade)
     pokemonCPU = cpu.escolherPokemon();
 }
 
-// Método para iniciar a batalha
-void Batalha::iniciar() {
-    cout << "A batalha começou entre " << jogador.getNome() << " e a CPU!\n";
-    
-    while (pokemonJogador->getHP() > 0 && pokemonCPU->getHP() > 0) {
-        exibirStatus();
-        turnoJogador();
-        if (pokemonCPU->getHP() <= 0) break;
-        turnoCPU();
-    }
-}
-
 
 // Exibe o status dos Pokémon em batalha
 void Batalha::exibirStatus() const {
     cout << "Status atual:\n";
-    cout << jogador.getNome() << " - " << pokemonJogador->getNome() 
-              << " HP: " << pokemonJogador->getHP() << "\n";
-    cout << "CPU - " << pokemonCPU->getNome() 
-              << " HP: " << pokemonCPU->getHP() << "\n";
+    cout << jogador.getNome() << " - " << pokemonJogador.getNome() 
+         << " HP: " << pokemonJogador.getHP() << "\n";
+    cout << "CPU - " << pokemonCPU.getNome() 
+         << " HP: " << pokemonCPU.getHP() << "\n";
 }
 
 // Turno do jogador
 void Batalha::turnoJogador() {
     cout << jogador.getNome() << ", escolha um ataque:\n";
-    pokemonJogador->listarAtaques();
-
+    
+    //  Exibir lista de ataques e obter escolha
+    pokemonJogador.exibirAtaques();
     int escolha;
     cout << "Digite o número do ataque: ";
     cin >> escolha;
 
-    Ataque ataqueEscolhido = pokemonJogador->escolherAtaque(escolha);
-    int dano = calcularDano(ataqueEscolhido, pokemonJogador, pokemonCPU);
-    pokemonCPU->receberDano(dano);
+    Ataque ataqueEscolhido = pokemonJogador.sortearAtaques(escolha);
+    int dano = pokemonJogador.calcularDano(ataqueEscolhido, pokemonCPU);
+    pokemonCPU.reduzirHP(dano);
 
-    cout << pokemonJogador->getNome() << " usou " << ataqueEscolhido.getNome() 
-              << " causando " << dano << " de dano!\n";
+    cout << pokemonJogador.getNome() << " usou " << ataqueEscolhido.getMove() 
+         << " causando " << dano << " de dano!\n";
 }
 
 // Turno da CPU
@@ -55,25 +43,56 @@ void Batalha::turnoCPU() {
     Ataque ataqueCPU;
     switch (dificuldade) {
         case FACIL:
-            ataqueCPU = escolherAtaqueFraco(pokemonCPU);
+            ataqueCPU = pokemonCPU.escolherAtaqueFraco();
             break;
         case MEDIO:
-            ataqueCPU = pokemonCPU->escolherAtaqueAleatorio();
+            ataqueCPU = pokemonCPU.escolherAtaqueAleatorio();
             break;
         case DIFICIL:
-            ataqueCPU = escolherAtaqueForte(pokemonCPU);
+            ataqueCPU = pokemonCPU.escolherAtaqueForte();
             break;
     }
 
-    int dano = calcularDano(ataqueCPU, pokemonCPU, pokemonJogador);
-    pokemonJogador->receberDano(dano);
+    int dano = pokemonCPU.calcularDano(ataqueCPU, pokemonJogador);
+    pokemonJogador.reduzirHP(dano);
 
-    cout << "CPU usou " << ataqueCPU.getNome() << " causando " << dano << " de dano!\n";
+    cout << "CPU usou " << ataqueCPU.getMove() << " causando " << dano << " de dano!\n";
 }
 
-// Calcula o dano de um ataque
-int Batalha::calcularDano(const Ataque& ataque, Pokemon* atacante, Pokemon* defensor) {
-    int dano = ataque.getPoder();
-    // Ajustes adicionais podem ser aplicados considerando tipo, nível, etc.
-    return dano;
+Ataque Batalha::escolherAtaqueFraco(Pokemon* pokemonOponente) {
+    // Preencha os ataques primeiro
+    sortearAtaques(vetor_ataques, 4);
+    
+    // Lógica para escolher um ataque fraco a partir do vetor de ataques sorteados
+    // Por exemplo, você pode escolher o ataque com menor dano
+    Ataque ataqueFraco;
+    int danoMinimo = INT_MAX;
+
+    for (const Ataque& ataque : ataque) {
+        if (ataque.getDano() < danoMinimo) {
+            danoMinimo = ataque.getDano();
+            ataqueFraco = ataque;
+        }
+    }
+
+    return ataqueFraco;
+}
+
+Ataque Batalha::escolherAtaqueForte(Pokemon* pokemonOponente) {
+    // Preencha os ataques primeiro
+    sortearAtaques(vetor_ataques, 4);
+    
+    // Lógica para escolher um ataque forte a partir do vetor de ataques sorteados
+    // Por exemplo, você pode escolher o ataque com maior dano
+    Ataque ataqueForte;
+    int danoMaximo = -1;
+
+    for (const Ataque& ataque : ataque) {
+        if (ataque.getDano() > danoMaximo) {
+            danoMaximo = ataque.getDano();
+            ataqueForte = ataque;
+        }
+    }
+
+    return ataqueForte;
 }
