@@ -34,11 +34,13 @@ public:
     void adicionarPokemon(const Pokemon& Pokemon);
     void sortearPokemons(const vector<Pokemon>& listaPokemons, size_t qtd_pokemons);
     Pokemon &escolherPokemon();
+    Pokemon &pokemonCPU();
     void adicionarPontuacao(int pontos);
     void registrarVitoria();
     void registrarDerrota();
     void exibirInfo() const;
     void exibirPokemons() const;
+    void reduzirHP(int dano);
 
 };
 

@@ -49,7 +49,6 @@ public:
     float calcularMultiplicador(const Ataque& ataque, const Pokemon& defensor);
     bool estaDerrotado() const;
     void exibirAtaques() const;
-    void reduzirHP(int dano);
 };
 
 #endif

@@ -2,6 +2,7 @@
 #define JOGO_H
 
 #include <iostream>
+#include <algorithm>
 #include <vector>
 #include <string>
 #include <fstream>
@@ -21,8 +22,8 @@ private:
     vector<Pokemon> pokemonsDisponiveis;  // Lista de Pokémon
     vector<Ataque> ataquesDisponiveis;    // Lista de Ataques
     vector<Jogador> jogadores;            // Jogadores cadastrados
-    Jogador cpu;                               // CPU controlada pelo jogo
-    Dificuldade dificuldade;                   // Enum de dificuldade
+    Jogador cpu;                         // CPU controlada pelo jogo
+    Dificuldade dificuldade;            // Enum de dificuldade
 
 public:
     Jogo();  // Construtor padrão
@@ -41,9 +42,10 @@ public:
     // Funções auxiliares para carregar dados
     void carregarPokemons();
     void carregarAtaques();
-    void turnoJogador(Pokemon* atacante, Pokemon* defensor);
-    void turnoCPU(Pokemon* atacante, Pokemon* defensor);
+    void turnoJogador(Jogador* atacante, Jogador* defensor);
+    void turnoCPU(Jogador* atacante, Jogador* defensor);
     void exibirStatus(const Pokemon* p1, const Pokemon* p2) const;
+    Jogador selecionarJogador();
 };
 
 #endif  // JOGO_H

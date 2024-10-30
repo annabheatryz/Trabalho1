@@ -47,7 +47,9 @@ void Jogador::sortearPokemons(const vector<Pokemon>& listaPokemons, size_t qtd_p
     pokemons = sorteados;
 }
 
-Pokemon& Jogador::escolherPokemon(){
+Pokemon& Jogador::escolherPokemon() {
+   // FALTA VERIFICAR SE O POKEMON ESTÁ DESMAIADO 
+
     int indice;
     cout << "Escolha o índice do Pokémon para a batalha: ";
     cin >> indice;
@@ -58,6 +60,20 @@ Pokemon& Jogador::escolherPokemon(){
         cerr << "índice inválido! Usando o primeiro Pokémon da lista.\n";
         return pokemons[0];
     }
+}
+
+void Pokemon::reduzirHP(int dano) {
+    hp -= dano;  // Subtrai o dano do HP atual
+    if (hp < 0){
+        hp = 0;  // HP não pode ser negativo
+        cout << getNome() << " recebeu " << dano << " de dano! HP restante: " << getHP() << endl;
+    }
+}
+
+Pokemon& Jogador::pokemonCPU() {
+    // Escolhe um pokemon para
+    size_t indice = rand() % pokemons.size();
+    return &pokemons[indice];
 }
 
 //Atualizar a pontuação com base na dificuldade da partida
@@ -90,81 +106,3 @@ void Jogador::exibirPokemons() const{
         cout << i << ":" << pokemons[i].getNome() << " (HP: " << pokemons[i].getHP() << ")" << endl;
     }
 }
-/*
-int main() {
-    // Criar jogadores
-    Jogador jogador("Ash");
-    Jogador cpu("CPU");
-
-    // Criar uma lista de pokémons disponíveis
-    vector<Pokemon> listaPokemons = {
-        Pokemon("Pikachu", "Elétrico", "N/A", 50, 120, 120, 55, 40, 50, 50),
-        Pokemon("Charmander", "Fogo", "N/A", 40, 100, 100, 52, 43, 60, 50),
-        Pokemon("Bulbasaur", "Grama", "N/A", 45, 110, 110, 49, 49, 65, 65),
-        Pokemon("Squirtle", "Água", "N/A", 44, 110, 110, 48, 65, 50, 64),
-    };
-
-    // Sortear pokémons para os jogadores
-    jogador.sortearPokemons(listaPokemons, 3);
-    cpu.sortearPokemons(listaPokemons, 3);
-
-    // Exibir os pokémons sorteados
-    jogador.exibirPokemons(); 
-    cout << endl;
-    cpu.exibirPokemons();
-
-    // Criar uma lista de ataques disponíveis
-    vector<Ataque> listaAtaques = {
-        Ataque("Lança-chamas", false, 90, 1.0, "Fogo"),  // Ataque especial
-        Ataque("Ataque de Asa", true, 60, 1.0, "Voador"),  // Ataque físico
-        Ataque("Investida", true, 40, 1.0, "Normal"),  // Ataque físico
-        Ataque("Raio Solar", false, 120, 0.75, "Grama"),  // Ataque especial
-        Ataque("Terremoto", true, 100, 1.0, "Terrestre")  // Ataque físico
-    };
-
-    // Mostrar lista de ataques disponíveis
-    cout << "\nAtaques disponíveis:\n";
-    for (const auto& ataque : listaAtaques) {
-        cout << "- " << ataque.getMove() << " (Tipo: " << ataque.getTipo()
-             << ", Poder: " << ataque.getPoder() << ", Físico: " << (ataque.isFisico() ? "Sim" : "Não") << ")\n";
-    }
-
-    // Criar um Pokémon
-    cout << "\nCriando o Pokémon Charizard...\n";
-    Pokemon charizard("Charizard", "Fogo", "Voador", 180, 50, 180, 84, 78, 109, 85);
-
-    // Mostrar status do Pokémon antes do sorteio de ataques
-    cout << "Status do Pokémon Charizard:\n";
-    cout << "Nome: " << charizard.getNome() << "\n"
-         << "Tipo 1: " << charizard.getTipo1() << "\n"
-         << "Tipo 2: " << charizard.getTipo2() << "\n"
-         << "HP: " << charizard.getHP() << "\n";
-
-    // Sortear ataques para o Charizard
-    cout << "\nSorteando ataques para Charizard...\n";
-    charizard.sortearAtaques(listaAtaques, 4);
-
-    // Mostrar os ataques sorteados
-    cout << "\nAtaques sorteados para Charizard:\n";
-    charizard.exibirAtaques();  // Método para exibir os ataques sorteados
-
-    // Criar outro Pokémon para a batalha (Bulbasaur)
-    cout << "\nCriando o Pokémon Bulbasaur...\n";
-    Pokemon bulbasaur("Bulbasaur", "Grama", "Venenoso", 150, 50, 49, 49, 45, 65, 65);
-
-    // Mostrar status do Pokémon defensor
-    cout << "Status do Pokémon Bulbasaur:\n";
-    cout << "Nome: " << bulbasaur.getNome() << "\n"
-         << "Tipo 1: " << bulbasaur.getTipo1() << "\n"
-         << "Tipo 2: " << bulbasaur.getTipo2() << "\n"
-         << "HP: " << bulbasaur.getHP() << "\n";
-
-    // Simular um ataque (Charizard usa "Lança-chamas" contra Bulbasaur)
-    cout << "\nCharizard ataca Bulbasaur com Lança-chamas!\n";
-    charizard.calcularDano(listaAtaques[0], bulbasaur);
-
-    cout << "\nPrograma executado com sucesso!\n";
-
-    return 0;
-}
- */
