@@ -82,19 +82,12 @@ void Pokemon::sortearAtaques(const vector<Ataque>& vetor_ataques, size_t qtd_ata
     ataques = sorteados;
 }
 
-Ataque Pokemon::escolherAtaques(int indice) {
-    // Verifica se o vetor de ataques está vazio
-    if (ataques.empty()) {
-        cerr << "Nenhum ataque disponível!" << endl;
-        return Ataque("Ataque Inválido", false, 0, 0.0, "Normal");
-    }
-
-    // Verifica se o índice está dentro do intervalo válido
-    if (indice >= 0 && indice < static_cast<int>(ataques.size())) {
-        return ataques[indice];
+// Função que escolhe um ataque para a CPU ou o jogador.
+Ataque Pokemon::escolherAtaques(const vector<Ataque>& ataques, int ataqueEscolhido) {
+    if (ataqueEscolhido > 0 && ataqueEscolhido < static_cast<int>(ataques.size())) {
+        return ataques[ataqueEscolhido];  // Retorna o ataque correspondente.
     } else {
-        cerr << "Índice inválido: " << indice << ", Tamanho atual: " << ataques.size() << endl;
-        return Ataque("Ataque Inválido", false, 0, 0.0, "Normal");
+        throw std::out_of_range("Índice de ataque inválido.");
     }
 }
 
@@ -103,9 +96,9 @@ bool Pokemon::estaDerrotado() const {
 }
 
 void Pokemon::exibirAtaques() const {
-    cout << "Ataques do Pokémon " << nome << ":\n";
+    cout << "Ataques do Pokémon " << getNome() << ":\n";
     for (size_t i = 0; i < ataques.size(); ++i) {
-        cout << i + 1 << ". " << ataques[i].getMove() << " (Tipo: " << ataques[i].getTipo()
+        cout << i << ". " << ataques[i].getMove() << " (Tipo: " << ataques[i].getTipo()
              << ", Poder: " << ataques[i].getPoder() << ", Físico: " << (ataques[i].isFisico() ? "Sim" : "Não") << ")\n";
     }
 }

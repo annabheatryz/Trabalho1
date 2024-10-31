@@ -237,7 +237,8 @@ void Jogo::turnoJogador(Pokemon* atacante, Pokemon* defensor) {
 }
 
 void Jogo::turnoCPU(Pokemon* atacante, Pokemon* defensor) {
-    Ataque ataqueEscolhido = atacante->escolherAtaques(0);
+    int indice = rand() % 4; // Escolhe um índice aleatório entre 0 e 3
+    Ataque ataqueEscolhido = atacante->getAtaque(indice);
     int dano = atacante->calcularDano(ataqueEscolhido, *defensor);
     defensor->reduzirHP(dano);
 
