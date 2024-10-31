@@ -83,11 +83,17 @@ void Pokemon::sortearAtaques(const vector<Ataque>& vetor_ataques, size_t qtd_ata
 }
 
 Ataque Pokemon::escolherAtaques(int indice) {
-    // Converte ataques.size() para int para evitar o aviso de comparação de tipos com sinais diferentes
+    // Verifica se o vetor de ataques está vazio
+    if (ataques.empty()) {
+        cerr << "Nenhum ataque disponível!" << endl;
+        return Ataque("Ataque Inválido", false, 0, 0.0, "Normal");
+    }
+
+    // Verifica se o índice está dentro do intervalo válido
     if (indice >= 0 && indice < static_cast<int>(ataques.size())) {
         return ataques[indice];
     } else {
-        // Ajuste o construtor para os cinco parâmetros necessários
+        cerr << "Índice inválido: " << indice << ", Tamanho atual: " << ataques.size() << endl;
         return Ataque("Ataque Inválido", false, 0, 0.0, "Normal");
     }
 }
@@ -181,4 +187,15 @@ float Pokemon::calcularMultiplicador(const Ataque& ataque, const Pokemon& defens
     // Exibir o multiplicador
     cout << "Multiplicador de tipo: " << multiplicador << "\n";
     return multiplicador;
+}
+
+Ataque Pokemon::getAtaque(int i) const {
+    return ataques.at(i);  // Retorna o ataque no índice especificado, com verificação de limites
+}
+void Pokemon::reduzirHP(int dano) {
+    hp -= dano;  // Subtrai o dano do HP atual
+    if (hp < 0){
+        hp = 0;  // HP não pode ser negativo
+        cout << getNome() << " recebeu " << dano << " de dano! HP restante: " << getHP() << endl;
+    }
 }

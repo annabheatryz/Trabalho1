@@ -90,28 +90,28 @@ void Jogo::iniciarBatalha(Jogador& jogador) {
     cpu.sortearPokemons(pokemonsDisponiveis, 3);
 
     // Escolhe o Pokémon inicial para ambos
-    Pokemon* pokemonJogador = jogador.escolherPokemon();
-    Pokemon* pokemonCPU = cpu.pokemonCPU();
+    Pokemon pokemonJogador = jogador.escolherPokemon();
+    Pokemon pokemonCPU = cpu.pokemonCPU();
 
     // Loop da batalha
     while (true) {
-        exibirStatus(pokemonJogador, pokemonCPU);
-        turnoJogador(pokemonJogador, pokemonCPU); // Chama a função do jogador
+        exibirStatus(&pokemonJogador, &pokemonCPU);
+        turnoJogador(&pokemonJogador, &pokemonCPU); // Chama a função do jogador
 
         // Verifica se o Pokémon do CPU foi nocauteado
-        if (pokemonCPU->getHP() <= 0) {
+        if (pokemonCPU.getHP() <= 0) {
             cout << "Você venceu a batalha!\n";
-            jogador.adicionarVitoria();
+            jogador.registrarVitoria();
             break;  // Sai do loop se o Pokémon da CPU foi nocauteado
         }
 
         // O turno da CPU só ocorre se o Pokémon do jogador ainda está em pé
-        turnoCPU(cpu);  // Passa a referência da CPU
+        turnoCPU(&pokemonCPU, &pokemonJogador);  // Passa a referência da CPU
 
         // Verifica se o Pokémon do jogador foi nocauteado
-        if (pokemonJogador->getHP() <= 0) {
+        if (pokemonJogador.getHP() <= 0) {
             cout << "Você perdeu a batalha.\n";
-            jogador.adicionarDerrota();
+            jogador.registrarDerrota();
             break;  // Sai do loop se o Pokémon do jogador foi nocauteado
         }
         
@@ -174,7 +174,7 @@ void Jogo::carregarPokemons() {
     while (getline(arquivo, linha)) {
         stringstream ss(linha);
         string nome, tipo1, tipo2, temp;
-        int hp, nivel, ataque, defesa;
+        int hp, nivel, ataque, defesa, velocidade, ataque_especial, defesa_especial;
 
         getline(ss, nome, ',');
         getline(ss, tipo1, ',');
@@ -183,6 +183,9 @@ void Jogo::carregarPokemons() {
         getline(ss, temp, ','); nivel = stoi(temp);
         getline(ss, temp, ','); ataque = stoi(temp);
         getline(ss, temp, ','); defesa = stoi(temp);
+        getline(ss, temp, ','); velocidade = stoi(temp);
+        getline(ss, temp, ','); ataque_especial = stoi(temp);
+        getline(ss, temp, ','); defesa_especial = stoi(temp);
 
         pokemonsDisponiveis.emplace_back(nome, tipo1, tipo2, hp, nivel, ataque, defesa, velocidade, ataque_especial, defesa_especial);
     }
@@ -226,7 +229,7 @@ void Jogo::turnoJogador(Pokemon* atacante, Pokemon* defensor) {
     cin >> escolha;
 
     Ataque ataqueEscolhido = atacante->getAtaque(escolha);
-    int dano = atacante->calcularDano(ataqueEscolhido, defensor);
+    int dano = atacante->calcularDano(ataqueEscolhido, *defensor);
     defensor->reduzirHP(dano);
 
     cout << atacante->getNome() << " usou " << ataqueEscolhido.getMove()
@@ -234,8 +237,8 @@ void Jogo::turnoJogador(Pokemon* atacante, Pokemon* defensor) {
 }
 
 void Jogo::turnoCPU(Pokemon* atacante, Pokemon* defensor) {
-    Ataque ataqueEscolhido = atacante->escolherAtaqueAleatorio();
-    int dano = atacante->calcularDano(ataqueEscolhido, defensor);
+    Ataque ataqueEscolhido = atacante->escolherAtaques(0);
+    int dano = atacante->calcularDano(ataqueEscolhido, *defensor);
     defensor->reduzirHP(dano);
 
     cout << "CPU usou " << ataqueEscolhido.getMove() << " causando " << dano << " de dano!\n";

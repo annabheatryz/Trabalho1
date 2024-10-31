@@ -48,32 +48,27 @@ void Jogador::sortearPokemons(const vector<Pokemon>& listaPokemons, size_t qtd_p
 }
 
 Pokemon& Jogador::escolherPokemon() {
-   // FALTA VERIFICAR SE O POKEMON ESTÁ DESMAIADO 
-
-    int indice;
-    cout << "Escolha o índice do Pokémon para a batalha: ";
+    size_t indice;
+    cout << "Escolha o índice do Pokémon para a batalha entre 0 e 2: ";
     cin >> indice;
 
-    if(indice >= 0 && indice < pokemons.size()){
-        return pokemons[indice];
+    if (indice >= 0 && indice < pokemons.size()) {
+        // Verifica se o Pokémon escolhido está derrotado
+        if (pokemons[indice].estaDerrotado()) {
+                cout << "Este Pokémon está derrotado. Escolha outro." << endl;
+            return escolherPokemon(); // Chama a função novamente para escolher outro Pokémon
+        }
+        return pokemons[indice]; // Retorna o Pokémon escolhido
     } else {
-        cerr << "índice inválido! Usando o primeiro Pokémon da lista.\n";
-        return pokemons[0];
-    }
-}
-
-void Pokemon::reduzirHP(int dano) {
-    hp -= dano;  // Subtrai o dano do HP atual
-    if (hp < 0){
-        hp = 0;  // HP não pode ser negativo
-        cout << getNome() << " recebeu " << dano << " de dano! HP restante: " << getHP() << endl;
+        cout << "Índice inválido. Tente novamente." << endl;
+        return escolherPokemon(); // Chama a função novamente para escolher outro Pokémon
     }
 }
 
 Pokemon& Jogador::pokemonCPU() {
     // Escolhe um pokemon para
     size_t indice = rand() % pokemons.size();
-    return &pokemons[indice];
+    return pokemons[indice];
 }
 
 //Atualizar a pontuação com base na dificuldade da partida

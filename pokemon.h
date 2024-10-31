@@ -27,7 +27,7 @@ public:
     string getTipo2() const;
     int getHP() const;
     int getNivel() const;
-    int getAtaque() const;
+    Ataque getAtaque(int i) const;
     int getDefesa() const;
     int getVelocidade() const;
     int getAtaqueEspecial() const;
@@ -49,6 +49,7 @@ public:
     float calcularMultiplicador(const Ataque& ataque, const Pokemon& defensor);
     bool estaDerrotado() const;
     void exibirAtaques() const;
+    void reduzirHP(int dano);
 };
 
 #endif

@@ -4,8 +4,8 @@ CXXFLAGS = -std=c++11 -Wall
 
 # Diretivas de arquivos
 TARGET = main
-OBJECTS = main.o pokemon.o ataque.o jogo.o
-HEADERS = pokemon.h ataque.h jogo.h
+OBJECTS = main.o pokemon.o ataque.o jogo.o jogador.o  
+HEADERS = pokemon.h ataque.h jogo.h jogador.h  
 
 # Regra padrão
 all: $(TARGET)
@@ -24,8 +24,11 @@ pokemon.o: pokemon.cpp pokemon.h
 ataque.o: ataque.cpp ataque.h
 	$(CXX) $(CXXFLAGS) -c ataque.cpp
 
-batalha.o: batalha.cpp jogo.h
+jogo.o: jogo.cpp $(HEADERS)  
 	$(CXX) $(CXXFLAGS) -c jogo.cpp
+
+jogador.o: jogador.cpp jogador.h 
+	$(CXX) $(CXXFLAGS) -c jogador.cpp
 
 # Limpeza dos arquivos temporários
 clean:

@@ -42,8 +42,8 @@ public:
     // Funções auxiliares para carregar dados
     void carregarPokemons();
     void carregarAtaques();
-    void turnoJogador(Jogador* atacante, Jogador* defensor);
-    void turnoCPU(Jogador* atacante, Jogador* defensor);
+    void turnoJogador(Pokemon* atacante, Pokemon* defensor);
+    void turnoCPU(Pokemon* atacante, Pokemon* defensor);
     void exibirStatus(const Pokemon* p1, const Pokemon* p2) const;
     Jogador selecionarJogador();
 };
