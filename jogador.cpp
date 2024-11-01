@@ -48,6 +48,8 @@ void Jogador::sortearPokemons(const vector<Pokemon>& listaPokemons, size_t qtd_p
 }
 
 Pokemon& Jogador::escolherPokemon() {
+    exibirPokemons();
+
     size_t indice;
     cout << "Escolha o índice do Pokémon para a batalha entre 0 e 2: ";
     cin >> indice;

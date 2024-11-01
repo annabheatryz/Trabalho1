@@ -44,7 +44,7 @@ public:
     void setDefesaEspecial(int dfs_especial);
 
     void sortearAtaques(const vector<Ataque>& vetor_ataques, size_t qtd_ataques);
-    Ataque escolherAtaques(const vector<Ataque>& ataques, int ataqueEscolhido);
+    Ataque& escolherAtaque();
     int calcularDano(Ataque& ataque, const Pokemon& defensor);
     float calcularMultiplicador(const Ataque& ataque, const Pokemon& defensor);
     bool estaDerrotado() const;
