@@ -24,6 +24,10 @@ private:
     vector<Jogador> jogadores;            // Jogadores cadastrados
     Jogador cpu;                         // CPU controlada pelo jogo
     Dificuldade dificuldade;            // Enum de dificuldade
+    vector<Pokemon*> pokemons_jogador;
+    vector<Pokemon*> pokemons_cpu;
+    Pokemon* jogador_atual;
+    Pokemon* atual_cpu;
 
 public:
     Jogo();  // Construtor padrão
@@ -38,10 +42,15 @@ public:
     void ajustarDificuldade();
     void exibirRanking();
     void salvarDados();
+    
 
-    // Funções auxiliares para carregar dados
+    // Funções auxiliares para possibilitar o inicio da batalha
     void carregarPokemons();
     void carregarAtaques();
+    Pokemon& escolherPokemonJogador();
+    Pokemon& escolherPokemonCPU();
+    void sortearPokemons();
+    void distribuirAtaques(Pokemon& pokemon);
     void turnoJogador(Pokemon* atacante, Pokemon* defensor);
     void turnoCPU(Pokemon* atacante, Pokemon* defensor);
     void exibirStatus(const Pokemon* p1, const Pokemon* p2) const;

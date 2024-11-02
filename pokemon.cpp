@@ -53,59 +53,6 @@ void Pokemon::setVelocidade(int v) {velocidade = v;}
 void Pokemon::setAtaqueEspecial(int atq_especial) {ataque_especial = atq_especial;}
 void Pokemon::setDefesaEspecial(int dfs_especial) {defesa_especial = dfs_especial;}
 
-void Pokemon::sortearAtaques(const vector<Ataque>& vetor_ataques, size_t qtd_ataques) {
-    ataques.clear(); //Limpa os ataques antes
-    vector<Ataque> sorteados;
-    vector<bool> ataques_selecionados(vetor_ataques.size(), false);
-
-    // Define a semente para gerar números aleatórios
-    srand(time(0));
-
-    while (sorteados.size() < qtd_ataques) {
-        // Gera um índice aleatório
-        int indice = rand() % vetor_ataques.size();
-        const Ataque& atq_sorteado = vetor_ataques[indice];
-
-        // Verifica se o ataque já foi sorteado
-        if (!ataques_selecionados[indice]) {
-            // Verifica se o ataque sorteado corresponde ao tipo "Normal", tipo1 ou tipo2 do Pokémon
-            if (atq_sorteado.getTipo() == "Normal" || atq_sorteado.getTipo() == tipo1 || atq_sorteado.getTipo() == tipo2) {
-                // Adiciona o ataque ao vetor de sorteados
-                sorteados.push_back(vetor_ataques[indice]);
-
-                // Marca o ataque como sorteado
-                ataques_selecionados[indice] = true;
-            }
-        }
-    }
-    // Atualiza o vetor de ataques do Pokémon com os sorteados
-    ataques = sorteados;
-}
-
-Ataque& Pokemon::escolherAtaque() {
-    // Verifica se o vetor de ataques não está vazio
-    if (ataques.empty()) {
-        throw std::runtime_error("Erro: Nenhum ataque disponível para este Pokémon.");
-    }
-
-    exibirAtaques();
-
-    size_t indice;
-    cout << "Escolha o índice do ataque para a batalha entre 0 e " << ataques.size() - 1 << ": ";
-    cin >> indice;
-
-    if (indice >= 0 && indice < ataques.size()) {
-        return ataques[indice];
-    } else {
-        cout << "Índice inválido. Tente novamente." << endl;
-        return escolherAtaque();  // Chama a função novamente para escolher um índice válido
-    }
-}
-
-
-bool Pokemon::estaDerrotado() const {
-    return hp <=0;
-}
 
 void Pokemon::exibirAtaques() const {
     cout << "Ataques do Pokémon " << getNome() << ":\n";
@@ -197,6 +144,11 @@ float Pokemon::calcularMultiplicador(const Ataque& ataque, const Pokemon& defens
 Ataque Pokemon::getAtaque(int i) const {
     return ataques.at(i);  // Retorna o ataque no índice especificado, com verificação de limites
 }
+
+void Pokemon::adicionarAtaque(const Ataque& ataque) {
+    ataques.push_back(ataque);
+}
+
 void Pokemon::reduzirHP(int dano) {
     hp -= dano;  // Subtrai o dano do HP atual
     if (hp < 0){

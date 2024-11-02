@@ -85,43 +85,45 @@ Jogador Jogo::selecionarJogador() {
 }
 
 void Jogo::iniciarBatalha(Jogador& jogador) {
-    // Sorteia 3 Pokémon para o jogador e para a CPU
-    jogador.sortearPokemons(pokemonsDisponiveis, 3);
-    cpu.sortearPokemons(pokemonsDisponiveis, 3);
+    char trocar;
 
-    // Escolhe o Pokémon inicial para ambos
-    Pokemon pokemonJogador = jogador.escolherPokemon();
-    Pokemon pokemonCPU = cpu.pokemonCPU();
+    cout << "===================Iniciando batalha===================" << endl;
+
+    // Escolhe um pokemon inicial para ambos
+    jogador_atual = &escolherPokemonJogador();
+    atual_cpu = &escolherPokemonCPU();
+
+    // Imprimir o Pokémon da CPU selecionado e seu HP inicial
+    cout << "A CPU escolheu: " << atual_cpu->getNome() << " com " << atual_cpu->getHP() << " HP.\n";
 
     // Loop da batalha
     while (true) {
-        exibirStatus(&pokemonJogador, &pokemonCPU);
-        turnoJogador(&pokemonJogador, &pokemonCPU); // Chama a função do jogador
+        exibirStatus(jogador_atual, atual_cpu);
+        turnoJogador(jogador_atual, atual_cpu); // Chama a função do jogador
 
         // Verifica se o Pokémon do CPU foi nocauteado
-        if (pokemonCPU.getHP() <= 0) {
+        if (atual_cpu->getHP() <= 0) {
             cout << "Você venceu a batalha!\n";
             jogador.registrarVitoria();
             break;  // Sai do loop se o Pokémon da CPU foi nocauteado
         }
 
         // O turno da CPU só ocorre se o Pokémon do jogador ainda está em pé
-        turnoCPU(&pokemonCPU, &pokemonJogador);  // Passa a referência da CPU
+        turnoCPU(atual_cpu, jogador_atual);  // Passa a referência da CPU
 
         // Verifica se o Pokémon do jogador foi nocauteado
-        if (pokemonJogador.getHP() <= 0) {
+        if (jogador_atual->getHP() <= 0) {
             cout << "Você perdeu a batalha.\n";
             jogador.registrarDerrota();
             break;  // Sai do loop se o Pokémon do jogador foi nocauteado
         }
         
         // Checa se o jogador deseja trocar de Pokémon após cada turno
-        char trocar;
         cout << "Deseja trocar de Pokémon? (s/n): ";
         cin >> trocar;
 
         if (trocar == 's' || trocar == 'S') {
-            pokemonJogador = jogador.escolherPokemon();  // Permite ao jogador escolher um novo Pokémon
+            jogador_atual = &escolherPokemonJogador();  // Permite ao jogador escolher um novo Pokémon
         }
     }
 }
@@ -191,6 +193,7 @@ void Jogo::carregarPokemons() {
     }
 
     cout << "Pokémons carregados com sucesso.\n";
+    arquivo.close();
 }
 
 void Jogo::carregarAtaques() {
@@ -220,6 +223,107 @@ void Jogo::carregarAtaques() {
     }
 
     cout << "Ataques carregados com sucesso.\n";
+    arquivo.close();
+}
+
+void Jogo::sortearPokemons() {
+    if (pokemonsDisponiveis.empty()) {
+        cerr << "Erro: Não há Pokémons disponíveis para sortear.\n";
+        return;
+    }
+
+    cout << "Sorteando Pokémons para o jogador e a CPU..." << endl;
+
+    // Limpa e redimensiona os vetores para garantir que tenham 3 slots
+    pokemons_jogador.clear();
+    pokemons_cpu.clear();
+    
+    std::vector<Pokemon*> copiaPokemons;
+    for (auto& pokemon : pokemonsDisponiveis) {
+        copiaPokemons.push_back(&pokemon);
+    }
+
+    // Sortear três Pokémon para o jogador sem repetição
+    for (int i = 0; i < 3; ++i) {
+        int index = rand() % copiaPokemons.size();
+        pokemons_jogador.push_back(copiaPokemons[index]);
+        distribuirAtaques(*pokemons_jogador[i]);
+        copiaPokemons.erase(copiaPokemons.begin() + index);
+    }
+
+    // Sortear três Pokémon para a CPU sem repetição
+    for (int i = 0; i < 3; ++i) {
+        int index = rand() % copiaPokemons.size();
+        pokemons_cpu.push_back(copiaPokemons[index]);
+        distribuirAtaques(*pokemons_cpu[i]);
+        copiaPokemons.erase(copiaPokemons.begin() + index);
+    }
+}
+
+
+void Jogo::distribuirAtaques(Pokemon& pokemon) {
+    vector<Ataque> ataquesValidos;
+    vector<Ataque> ataquesNormais;
+
+    // Filtra ataques que correspondem aos tipos do Pokémon e ataques do tipo "Normal"
+    for (const auto& ataque : ataquesDisponiveis) {
+        if (ataque.getTipo() == "Normal") {
+            ataquesNormais.push_back(ataque);  // Armazena ataques do tipo Normal
+        }
+        if (ataque.getTipo() == pokemon.getTipo1() || ataque.getTipo() == pokemon.getTipo2()) {
+            ataquesValidos.push_back(ataque);
+        }
+    }
+
+    // Se não houver ataques válidos suficientes, use ataques do tipo "Normal"
+    while (ataquesValidos.size() < 4 && !ataquesNormais.empty()) {
+        ataquesValidos.push_back(ataquesNormais.back());
+        ataquesNormais.pop_back();
+    }
+
+    // Se ainda não houver ataques suficientes, exiba erro
+    if (ataquesValidos.size() < 4) {
+        cerr << "Erro: Não há ataques válidos suficientes disponíveis para o Pokémon " << pokemon.getNome() << ".\n";
+        return;
+    }
+
+    // Garantir que o Pokémon receba 4 ataques diferentes
+    for (int i = 0; i < 4; ++i) {
+        int index = rand() % ataquesValidos.size();
+        pokemon.adicionarAtaque(ataquesValidos[index]);
+        ataquesValidos.erase(ataquesValidos.begin() + index);  // Remover o ataque já usado para evitar repetição
+    }
+}
+
+Pokemon& Jogo::escolherPokemonJogador() {
+    Jogador jogador;
+    size_t indice;
+
+    cout << "Escolha um Pokémon [0-2] para começar a batalha:\n";
+    jogador.exibirPokemons();
+    cin >> indice;
+
+    if (indice >= 0 && indice < pokemons_jogador.size()) {
+        // Verifica se o Pokémon escolhido está derrotado
+        if (pokemons_jogador[indice]->getHP() <= 0) {
+                cout << "Este Pokémon está derrotado. Escolha outro." << endl;
+            return escolherPokemonJogador(); // Chama a função novamente para escolher outro Pokémon
+        }
+        return *pokemons_jogador[indice]; // Retorna o Pokémon escolhido
+    } else {
+        cout << "Índice inválido. Tente novamente." << endl;
+        return escolherPokemonJogador(); // Chama a função novamente para escolher outro Pokémon
+    }
+}
+
+Pokemon& Jogo::escolherPokemonCPU() {
+    // Sorteia um índice entre 0 e 2 para escolher um dos três Pokémon da CPU
+    int indice;
+    do {
+        indice = rand() % pokemons_cpu.size(); 
+    } while (pokemons_cpu[indice]->getHP() <= 0);  // Garante que o Pokémon escolhido não esteja derrotado
+
+    return *pokemons_cpu[indice];  
 }
 
 void Jogo::turnoJogador(Pokemon* atacante, Pokemon* defensor) {
