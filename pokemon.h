@@ -28,6 +28,7 @@ public:
     int getHP() const;
     int getNivel() const;
     Ataque getAtaque(int i) const;
+    int getTotalAtaques() const;
     int getDefesa() const;
     int getVelocidade() const;
     int getAtaqueEspecial() const;
@@ -46,7 +47,6 @@ public:
     void adicionarAtaque(const Ataque& ataque);
     int calcularDano(Ataque& ataque, const Pokemon& defensor);
     float calcularMultiplicador(const Ataque& ataque, const Pokemon& defensor);
-    void exibirAtaques() const;
     void reduzirHP(int dano);
 };
 

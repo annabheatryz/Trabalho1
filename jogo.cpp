@@ -120,6 +120,7 @@ void Jogo::iniciarBatalha(Jogador& jogador) {
         }
         
         // Checa se o jogador deseja trocar de Pokémon após cada turno
+        exibirStatus(jogador_atual, atual_cpu);
         cout << "Deseja trocar de Pokémon? (s/n): ";
         cin >> trocar;
 
@@ -304,8 +305,6 @@ void Jogo::distribuirAtaques(Pokemon& pokemon) {
 }
 
 
-
-
 Pokemon& Jogo::escolherPokemonJogador() {
     Jogador jogador;
     size_t indice;
@@ -340,29 +339,44 @@ Pokemon& Jogo::escolherPokemonCPU() {
 }
 
 void Jogo::turnoJogador(Pokemon* atacante, Pokemon* defensor) {
-    atacante->exibirAtaques();
-    int escolha;
-    cout << "Escolha um ataque: ";
-    cin >> escolha;
+    int ataqueEscolhido;
+    
+    cout << "\n É a sua vez! Escolha um ataque: ";
+    for (int i = 0; i < atacante->getTotalAtaques(); ++i) {
+        cout << i + 1 << ". " << atacante->getAtaque(i).getMove() << endl;
+    }
 
-    Ataque ataqueEscolhido = atacante->getAtaque(escolha);
-    int dano = atacante->calcularDano(ataqueEscolhido, *defensor);
+    cin >> ataqueEscolhido;
+
+    if (ataqueEscolhido < 0 || ataqueEscolhido >= atacante->getTotalAtaques()) {  // Valida se a escolha é válida
+    cout << "Ataque inválido. Escolha novamente.\n";
+    turnoJogador(atacante, defensor);
+    return;
+    }
+
+   Ataque ataque = atacante->getAtaque(ataqueEscolhido - 1);
+    int dano = atacante->calcularDano(ataque, *defensor);
     defensor->reduzirHP(dano);
 
-    cout << atacante->getNome() << " usou " << ataqueEscolhido.getMove()
-         << " causando " << dano << " de dano!\n";
+    cout << atacante->getNome() << " usou " << ataque.getMove() << " causando " << dano << " de dano!\n";
 }
 
 void Jogo::turnoCPU(Pokemon* atacante, Pokemon* defensor) {
+    cout << "\nTurno da CPU...\n";
+
     int indice = rand() % 4; // Escolhe um índice aleatório entre 0 e 3
     Ataque ataqueEscolhido = atacante->getAtaque(indice);
     int dano = atacante->calcularDano(ataqueEscolhido, *defensor);
     defensor->reduzirHP(dano);
 
+    if (atacante->getTotalAtaques() < 4) {
+        cerr << "Erro: Pokémon da CPU não tem ataques suficientes.\n";
+        return;
+    }
+
     cout << "CPU usou " << ataqueEscolhido.getMove() << " causando " << dano << " de dano!\n";
 }
 
 void Jogo::exibirStatus(const Pokemon* p1, const Pokemon* p2) const {
-    cout << p1->getNome() << " HP: " << p1->getHP() << " | "
-         << p2->getNome() << " HP: " << p2->getHP() << endl;
+    cout << p1->getNome() << " HP: " << p1->getHP() << " | " << p2->getNome() << " HP: " << p2->getHP() << endl;
 }

@@ -54,14 +54,6 @@ void Pokemon::setAtaqueEspecial(int atq_especial) {ataque_especial = atq_especia
 void Pokemon::setDefesaEspecial(int dfs_especial) {defesa_especial = dfs_especial;}
 
 
-void Pokemon::exibirAtaques() const {
-    cout << "Ataques do Pokémon " << getNome() << ":\n";
-    for (size_t i = 0; i < ataques.size(); i++) {
-        cout << i << ". " << ataques[i].getMove() << " (Tipo: " << ataques[i].getTipo()
-             << ", Poder: " << ataques[i].getPoder() << ", Físico: " << (ataques[i].isFisico() ? "Sim" : "Não") << ")\n";
-    }
-}
-
 int Pokemon::calcularDano(Ataque& ataque, const Pokemon& defensor) {
     // Verifica se o ataque acerta com base na precisão
     float sorteioPrecisao = static_cast<float>(rand() % 100 + 1) / 100.0;
@@ -123,8 +115,6 @@ int Pokemon::calcularDano(Ataque& ataque, const Pokemon& defensor) {
     return dano;
 }
 
-
-
 // Função para calcular multiplicadores (vantagem de tipos)
 float Pokemon::calcularMultiplicador(const Ataque& ataque, const Pokemon& defensor) {
     float multiplicador = 1.0f;
@@ -143,6 +133,10 @@ float Pokemon::calcularMultiplicador(const Ataque& ataque, const Pokemon& defens
 
 Ataque Pokemon::getAtaque(int i) const {
     return ataques.at(i);  // Retorna o ataque no índice especificado, com verificação de limites
+}
+
+int Pokemon::getTotalAtaques() const {
+    return ataques.size();
 }
 
 void Pokemon::adicionarAtaque(const Ataque& ataque) {
