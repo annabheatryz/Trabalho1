@@ -85,6 +85,7 @@ Jogador Jogo::selecionarJogador() {
 }
 
 void Jogo::iniciarBatalha(Jogador& jogador) {
+    sortearPokemons();
     char trocar;
 
     cout << "===================Iniciando batalha===================" << endl;
@@ -234,11 +235,8 @@ void Jogo::sortearPokemons() {
 
     cout << "Sorteando Pokémons para o jogador e a CPU..." << endl;
 
-    // Limpa e redimensiona os vetores para garantir que tenham 3 slots
-    pokemons_jogador.clear();
-    pokemons_cpu.clear();
     
-    std::vector<Pokemon*> copiaPokemons;
+    vector<Pokemon*> copiaPokemons;
     for (auto& pokemon : pokemonsDisponiveis) {
         copiaPokemons.push_back(&pokemon);
     }
@@ -264,6 +262,14 @@ void Jogo::sortearPokemons() {
 void Jogo::distribuirAtaques(Pokemon& pokemon) {
     vector<Ataque> ataquesValidos;
     vector<Ataque> ataquesNormais;
+
+    // Verificar se há ataques disponíveis
+    if (ataquesDisponiveis.empty()) {
+        cerr << "Erro: Não há ataques disponíveis para distribuição.\n";
+        return;
+    } else {
+        cout << "Número de ataques disponíveis: " << ataquesDisponiveis.size() << endl;
+    }
 
     // Filtra ataques que correspondem aos tipos do Pokémon e ataques do tipo "Normal"
     for (const auto& ataque : ataquesDisponiveis) {
@@ -293,12 +299,19 @@ void Jogo::distribuirAtaques(Pokemon& pokemon) {
         pokemon.adicionarAtaque(ataquesValidos[index]);
         ataquesValidos.erase(ataquesValidos.begin() + index);  // Remover o ataque já usado para evitar repetição
     }
+
+    cout << "Ataques distribuídos com sucesso para o Pokémon " << pokemon.getNome() << "!\n";
 }
+
+
+
 
 Pokemon& Jogo::escolherPokemonJogador() {
     Jogador jogador;
     size_t indice;
 
+
+    cout << "Número de Pokémons disponíveis: " << pokemons_jogador.size() << endl; //Verificando se o vetor estava sendo inicializado corretamente
     cout << "Escolha um Pokémon [0-2] para começar a batalha:\n";
     jogador.exibirPokemons();
     cin >> indice;
