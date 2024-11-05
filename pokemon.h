@@ -15,6 +15,7 @@ private:
     string tipo2;   // pode ser vazio, caso o pokemon tenha apenas um tipo
     int hp, nivel, ataque, defesa, velocidade, ataque_especial, defesa_especial; 
     vector<Ataque> ataques;  // Vetor para armazenar ataques do tipo Ataque    
+    vector<Pokemon> pokemons;
 public:
     // Construtor padrão
     Pokemon();

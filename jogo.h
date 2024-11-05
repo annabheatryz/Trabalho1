@@ -41,6 +41,7 @@ public:
     void iniciarBatalha(Jogador& jogador);
     void ajustarDificuldade();
     void exibirRanking();
+    void carregarJogadores();
     void salvarDados();
     
 
@@ -55,6 +56,7 @@ public:
     void turnoCPU(Pokemon* atacante, Pokemon* defensor);
     void exibirStatus(const Pokemon* p1, const Pokemon* p2) const;
     Jogador selecionarJogador();
+    void exibirPokemons();
 };
 
 #endif  // JOGO_H

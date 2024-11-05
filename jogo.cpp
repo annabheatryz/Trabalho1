@@ -17,6 +17,7 @@ Jogo::Jogo() : dificuldade(FACIL) {
     // Carrega os dados de Pokémon e ataques
     carregarPokemons();
     carregarAtaques();
+    carregarJogadores();
 }
 
 void Jogo::mostrarMenu() {
@@ -54,6 +55,29 @@ void Jogo::mostrarMenu() {
     } while (opcao != 4);
 }
 
+// Função para carregar os jogadores do ranking
+void Jogo::carregarJogadores() {
+    ifstream arquivoEntrada("ranking.txt");
+    string linha;
+
+    if (arquivoEntrada.is_open()) {
+        while (getline(arquivoEntrada, linha)) {
+            istringstream iss(linha);
+            string nome;
+            int vitorias, derrotas, pontos;
+            if (iss >> nome >> vitorias >> derrotas >> pontos) {
+                Jogador jogador(nome, vitorias, derrotas, pontos);
+                jogadores.push_back(jogador);
+            }
+        }
+        arquivoEntrada.close();
+    } else {
+        cerr << "Erro ao abrir o arquivo de ranking.txt para leitura.\n";
+    }
+}
+
+
+// Função para selecionar o jogador, que agora usa os dados carregados
 Jogador Jogo::selecionarJogador() {
     string nomeJogador;
     cout << "Digite o nome do jogador: ";
@@ -84,6 +108,7 @@ Jogador Jogo::selecionarJogador() {
     }
 }
 
+
 void Jogo::iniciarBatalha(Jogador& jogador) {
     sortearPokemons();
     char trocar;
@@ -105,7 +130,7 @@ void Jogo::iniciarBatalha(Jogador& jogador) {
         // Verifica se o Pokémon do CPU foi nocauteado
         if (atual_cpu->getHP() <= 0) {
             cout << "Você venceu a batalha!\n";
-            jogador.registrarVitoria();
+            jogador.registrarResultado(true);
             break;  // Sai do loop se o Pokémon da CPU foi nocauteado
         }
 
@@ -115,7 +140,7 @@ void Jogo::iniciarBatalha(Jogador& jogador) {
         // Verifica se o Pokémon do jogador foi nocauteado
         if (jogador_atual->getHP() <= 0) {
             cout << "Você perdeu a batalha.\n";
-            jogador.registrarDerrota();
+            jogador.registrarResultado(false);
             break;  // Sai do loop se o Pokémon do jogador foi nocauteado
         }
         
@@ -153,13 +178,15 @@ void Jogo::ajustarDificuldade() {
 }
 
 void Jogo::exibirRanking() {
+    ifstream arquivo("ranking.txt");
+    string linha;
     cout << "====== Ranking de Jogadores ======\n";
-    for (const auto& jogador : jogadores) {
-        cout << jogador.getNome() << " - Vitórias: " << jogador.getVitorias()
-             << " - Derrotas: " << jogador.getDerrotas()
-             << " - Pontuação: " << jogador.getPontuacao() << endl;
+    while (getline(arquivo, linha)) {
+        cout << linha << endl;
     }
+    arquivo.close();
 }
+
 
 void Jogo::salvarDados() {
     cout << "Dados salvos com sucesso!\n";
@@ -210,7 +237,7 @@ void Jogo::carregarAtaques() {
 
     while (getline(arquivo, linha)) {
         stringstream ss(linha);
-        string move, tipo, temp;
+        string move, tipo, temp, type;
         int poder;
         float precisao;
         bool fisico;
@@ -219,9 +246,10 @@ void Jogo::carregarAtaques() {
         getline(ss, tipo, ',');
         getline(ss, temp, ','); poder = stoi(temp);
         getline(ss, temp, ','); precisao = stof(temp);
+        getline(ss,type,',');
         fisico = (tipo == "fisico");
-
-        ataquesDisponiveis.emplace_back(move, fisico, poder, precisao, tipo);
+        type.pop_back();
+        ataquesDisponiveis.emplace_back(move, fisico, poder, precisao, type);
     }
 
     cout << "Ataques carregados com sucesso.\n";
@@ -264,14 +292,6 @@ void Jogo::distribuirAtaques(Pokemon& pokemon) {
     vector<Ataque> ataquesValidos;
     vector<Ataque> ataquesNormais;
 
-    // Verificar se há ataques disponíveis
-    if (ataquesDisponiveis.empty()) {
-        cerr << "Erro: Não há ataques disponíveis para distribuição.\n";
-        return;
-    } else {
-        cout << "Número de ataques disponíveis: " << ataquesDisponiveis.size() << endl;
-    }
-
     // Filtra ataques que correspondem aos tipos do Pokémon e ataques do tipo "Normal"
     for (const auto& ataque : ataquesDisponiveis) {
         if (ataque.getTipo() == "Normal") {
@@ -291,7 +311,7 @@ void Jogo::distribuirAtaques(Pokemon& pokemon) {
     // Se ainda não houver ataques suficientes, exiba erro
     if (ataquesValidos.size() < 4) {
         cerr << "Erro: Não há ataques válidos suficientes disponíveis para o Pokémon " << pokemon.getNome() << ".\n";
-        return;
+        
     }
 
     // Garantir que o Pokémon receba 4 ataques diferentes
@@ -301,32 +321,33 @@ void Jogo::distribuirAtaques(Pokemon& pokemon) {
         ataquesValidos.erase(ataquesValidos.begin() + index);  // Remover o ataque já usado para evitar repetição
     }
 
-    cout << "Ataques distribuídos com sucesso para o Pokémon " << pokemon.getNome() << "!\n";
+    cout << "Ataques distribuídos com sucesso para o Pokémon " << pokemon.getNome() << "!\n\n";
 }
 
 
 Pokemon& Jogo::escolherPokemonJogador() {
-    Jogador jogador;
     size_t indice;
+    exibirPokemons(); // Chama a função para mostrar os Pokémon disponíveis
 
-
-    cout << "Número de Pokémons disponíveis: " << pokemons_jogador.size() << endl; //Verificando se o vetor estava sendo inicializado corretamente
     cout << "Escolha um Pokémon [0-2] para começar a batalha:\n";
-    jogador.exibirPokemons();
     cin >> indice;
 
+    // Validação do índice
     if (indice >= 0 && indice < pokemons_jogador.size()) {
         // Verifica se o Pokémon escolhido está derrotado
-        if (pokemons_jogador[indice]->getHP() <= 0) {
-                cout << "Este Pokémon está derrotado. Escolha outro." << endl;
+        if (pokemons_jogador[indice]->getHP() > 0) {
+            return *pokemons_jogador[indice]; // Retorna o Pokémon escolhido
+        } else {
+            cout << "Este Pokémon está derrotado. Escolha outro." << endl;
             return escolherPokemonJogador(); // Chama a função novamente para escolher outro Pokémon
         }
-        return *pokemons_jogador[indice]; // Retorna o Pokémon escolhido
     } else {
         cout << "Índice inválido. Tente novamente." << endl;
         return escolherPokemonJogador(); // Chama a função novamente para escolher outro Pokémon
     }
 }
+
+
 
 Pokemon& Jogo::escolherPokemonCPU() {
     // Sorteia um índice entre 0 e 2 para escolher um dos três Pokémon da CPU
@@ -341,24 +362,24 @@ Pokemon& Jogo::escolherPokemonCPU() {
 void Jogo::turnoJogador(Pokemon* atacante, Pokemon* defensor) {
     int ataqueEscolhido;
     
-    cout << "\n É a sua vez! Escolha um ataque: ";
+    cout << "Escolha um ataque [1-" << atacante->getTotalAtaques() << "]:\n";
     for (int i = 0; i < atacante->getTotalAtaques(); ++i) {
-        cout << i + 1 << ". " << atacante->getAtaque(i).getMove() << endl;
+        cout << i+1 << ". " << atacante->getAtaque(i).getMove() << endl;
     }
 
     cin >> ataqueEscolhido;
 
-    if (ataqueEscolhido < 0 || ataqueEscolhido >= atacante->getTotalAtaques()) {  // Valida se a escolha é válida
-    cout << "Ataque inválido. Escolha novamente.\n";
-    turnoJogador(atacante, defensor);
-    return;
+    if (ataqueEscolhido < 0 || ataqueEscolhido > atacante->getTotalAtaques()) {  // Valida se a escolha é válida
+        cout << "Ataque inválido. Escolha novamente.\n";
+        turnoJogador(atacante, defensor);
+        return;
     }
 
    Ataque ataque = atacante->getAtaque(ataqueEscolhido - 1);
     int dano = atacante->calcularDano(ataque, *defensor);
     defensor->reduzirHP(dano);
 
-    cout << atacante->getNome() << " usou " << ataque.getMove() << " causando " << dano << " de dano!\n";
+    cout << atacante->getNome() << " usou " << ataque.getMove() << " causando " << dano << " de dano!\n VEZ DO ADVERSÁRIO: \n";
 }
 
 void Jogo::turnoCPU(Pokemon* atacante, Pokemon* defensor) {
@@ -379,4 +400,13 @@ void Jogo::turnoCPU(Pokemon* atacante, Pokemon* defensor) {
 
 void Jogo::exibirStatus(const Pokemon* p1, const Pokemon* p2) const {
     cout << p1->getNome() << " HP: " << p1->getHP() << " | " << p2->getNome() << " HP: " << p2->getHP() << endl;
+}
+
+void Jogo::exibirPokemons() {
+    cout << "Pokémons disponíveis para escolha:\n";
+    for (size_t i = 0; i < pokemons_jogador.size(); ++i) {
+        const auto& pokemon = *pokemons_jogador[i];
+        cout << i << ". Nome: " << pokemon.getNome()
+             << ", HP: " << pokemon.getHP() << endl;
+    }
 }
