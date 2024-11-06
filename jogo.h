@@ -38,6 +38,7 @@ public:
 
     // Funções principais do jogo
     void mostrarMenu();
+    void prepararBatalha();
     void iniciarBatalha(Jogador& jogador);
     void ajustarDificuldade();
     void exibirRanking();

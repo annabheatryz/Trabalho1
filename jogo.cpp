@@ -23,9 +23,9 @@ Jogo::Jogo() : dificuldade(FACIL) {
 void Jogo::mostrarMenu() {
     int opcao;
     do {
-        cout << "=============================\n";
+        cout << "\n=============================\n";
         cout << "        MENU PRINCIPAL       \n";
-        cout << "=============================\n";
+        cout << "=============================\n\n";
         cout << "1. Iniciar Batalha\n";
         cout << "2. Ajustar Dificuldade\n";
         cout << "3. Exibir Ranking\n";
@@ -109,7 +109,33 @@ Jogador Jogo::selecionarJogador() {
 }
 
 
+void Jogo::prepararBatalha() {
+    // Limpar ataques e status de cada Pokémon do jogador e da CPU
+    for (auto* pokemon : pokemons_jogador) {
+        if (pokemon) {
+            pokemon->limparPokemons();  // Limpa dados do Pokémon do jogador
+        }
+    }
+    for (auto* pokemon : pokemons_cpu) {
+        if (pokemon) {
+            pokemon->limparPokemons();  // Limpa dados do Pokémon da CPU
+        }
+    }
+    
+    // Limpar ataques dos Pokémon que estavam na batalha anterior
+    for (auto& pokemon : pokemonsDisponiveis) {
+        pokemon.limparAtaques();  // Remove ataques para evitar acúmulo de ataques antigos
+    }
+
+    // Esvaziar os vetores de Pokémon para uma nova seleção
+    pokemons_jogador.clear();
+    pokemons_cpu.clear();
+
+    cout << "Preparação da batalha concluída. Dados dos Pokémon e vetores limpos e prontos para nova partida.\n";
+}
+
 void Jogo::iniciarBatalha(Jogador& jogador) {
+    prepararBatalha();
     sortearPokemons();
     char trocar;
 
@@ -180,12 +206,37 @@ void Jogo::ajustarDificuldade() {
 void Jogo::exibirRanking() {
     ifstream arquivo("ranking.txt");
     string linha;
-    cout << "====== Ranking de Jogadores ======\n";
+    vector<Jogador> ranking;  // Vetor de jogadores
+
+    cout << "====== Ranking de Jogadores ======\n\n";
+
+    // Ler as linhas do arquivo
     while (getline(arquivo, linha)) {
-        cout << linha << endl;
+        stringstream ss(linha);
+        string nome;
+        int pontos, vitorias, derrotas;
+        
+        // Separando os campos da linha, que são separados por espaços
+        ss >> nome >> pontos >> vitorias >> derrotas;
+
+        // Armazenar o jogador no vetor
+        ranking.push_back(Jogador(nome, pontos, vitorias, derrotas));
     }
     arquivo.close();
+
+    // Ordenar o ranking com base na pontuação (ordem decrescente)
+    sort(ranking.begin(), ranking.end(), [](const Jogador& a, const Jogador& b) {
+        return a.getPontuacao() > b.getPontuacao();  // Ordenar pela pontuação (decrescente)
+    });
+
+    // Exibir o ranking
+    for (const auto& jogador : ranking) {
+        cout << jogador.getNome() << " - " << jogador.getPontuacao() << " pontos | "
+             << jogador.getVitorias() << " vitórias | " << jogador.getDerrotas() << " derrotas\n";
+    }
 }
+
+
 
 
 void Jogo::salvarDados() {
@@ -320,8 +371,6 @@ void Jogo::distribuirAtaques(Pokemon& pokemon) {
         pokemon.adicionarAtaque(ataquesValidos[index]);
         ataquesValidos.erase(ataquesValidos.begin() + index);  // Remover o ataque já usado para evitar repetição
     }
-
-    cout << "Ataques distribuídos com sucesso para o Pokémon " << pokemon.getNome() << "!\n\n";
 }
 
 

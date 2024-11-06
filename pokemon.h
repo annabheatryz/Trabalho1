@@ -49,6 +49,8 @@ public:
     int calcularDano(Ataque& ataque, const Pokemon& defensor);
     float calcularMultiplicador(const Ataque& ataque, const Pokemon& defensor);
     void reduzirHP(int dano);
+    void limparAtaques();
+    void limparPokemons();
 };
 
 #endif

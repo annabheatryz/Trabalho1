@@ -150,3 +150,11 @@ void Pokemon::reduzirHP(int dano) {
         cout << getNome() << " recebeu " << dano << " de dano! HP restante: " << getHP() << endl;
     }
 }
+
+void Pokemon::limparAtaques() {
+    ataques.clear(); // Limpa todos os ataques armazenados no vetor
+}
+
+void Pokemon::limparPokemons() {
+    pokemons.clear(); // Limpa todos os pokémon armazenados no vetor
+}

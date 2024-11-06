@@ -1,5 +1,4 @@
-
-Anna 4 0 10
-nome 4 0 10
+Anna 7 2 10
+nome 7 0 10
 joao 2 0 0
 maria 2 0 10
