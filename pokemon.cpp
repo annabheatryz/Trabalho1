@@ -7,10 +7,10 @@
 #include <map>
 
 // Construtor padrão
-Pokemon::Pokemon() : nome(""), tipo1(""), tipo2(""), hp(0), nivel(0), ataque(0), defesa(0), velocidade(0), ataque_especial(0), defesa_especial(0) {}
+Pokemon::Pokemon() : nome(""), tipo1(""), tipo2(""), hp(0), hpInicial(0), nivel(0), ataque(0), defesa(0), velocidade(0), ataque_especial(0), defesa_especial(0) {}
 
 // Construtor com parâmetros
-Pokemon::Pokemon(const string& n, const string& tp1, const string& tp2, int hp, int nvl, int atq, int dfs, int v, int atq_especial, int dfs_especial) : nome(n), tipo1(tp1), tipo2(tp2), hp(hp), nivel(nvl), ataque(atq), defesa(dfs), velocidade(v), ataque_especial(atq_especial), defesa_especial(dfs_especial) {}
+Pokemon::Pokemon(const string& n, const string& tp1, const string& tp2, int hp, int nvl, int atq, int dfs, int v, int atq_especial, int dfs_especial) : nome(n), tipo1(tp1), tipo2(tp2), hp(hp), hpInicial(hp), nivel(nvl), ataque(atq), defesa(dfs), velocidade(v), ataque_especial(atq_especial), defesa_especial(dfs_especial) {}
 
 // Tabela de efetividade de tipos de Pokémon
 map<string, map<string, double>> efetividadeTabela = {
@@ -157,4 +157,8 @@ void Pokemon::limparAtaques() {
 
 void Pokemon::limparPokemons() {
     pokemons.clear(); // Limpa todos os pokémon armazenados no vetor
+}
+
+void Pokemon::resetarHP() {
+    hp = hpInicial;  // Restaura o HP inicial do Pokémon
 }

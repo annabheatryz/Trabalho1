@@ -23,6 +23,7 @@ private:
     vector<Ataque> ataquesDisponiveis;    // Lista de Ataques
     vector<Jogador> jogadores;            // Jogadores cadastrados
     Jogador cpu;                         // CPU controlada pelo jogo
+    Jogador jogador;
     Dificuldade dificuldade;            // Enum de dificuldade
     vector<Pokemon*> pokemons_jogador;
     vector<Pokemon*> pokemons_cpu;
@@ -39,7 +40,7 @@ public:
     // Funções principais do jogo
     void mostrarMenu();
     void prepararBatalha();
-    void iniciarBatalha(Jogador& jogador);
+    void iniciarBatalha(Jogador& jogador, Dificuldade dificuldade);
     void ajustarDificuldade();
     void exibirRanking();
     void carregarJogadores();

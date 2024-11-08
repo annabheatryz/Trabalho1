@@ -35,7 +35,7 @@ public:
     
 
     void adicionarPontuacao(int pontos);
-    void registrarResultado(bool vitoria);
+    void registrarResultado(Jogador& jogador, bool vitoria, Dificuldade dificuldade);
     void salvarJogador();
     void salvarRanking();
     void adicionarDerrota();

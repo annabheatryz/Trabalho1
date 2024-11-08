@@ -22,34 +22,33 @@ void Jogador::setVitorias(int v) { vitorias = v; }
 void Jogador::setDerrotas(int d) { derrotas = d; }
 void Jogador::setPontuacao(int p) { pontuacao = p; }
 
-// Atualizar a pontuação com base na dificuldade da partida
-void Jogador::adicionarPontuacao(int pontos) {
-    pontuacao += pontos;
-}
-
-void Jogador::registrarResultado(bool vitoria) {
+void Jogador::registrarResultado(Jogador& jogador, bool vitoria, Dificuldade dificuldade) {
     int pontos = 0;
 
-    if (dificuldade == Dificuldade::DIFICIL) {
-        pontos = 30;
-    } else if (dificuldade == Dificuldade::MEDIO) {
-        pontos = 20;
-    } else if (dificuldade == Dificuldade::FACIL) {
-        pontos = 10;
-    }
-
+    // Define pontuação baseada na dificuldade apenas se for uma vitória
     if (vitoria) {
-        adicionarPontuacao(pontos);
-        adicionarVitoria();
+        switch (dificuldade) {
+            case Dificuldade::DIFICIL:
+                pontos += 30;
+                break;
+            case Dificuldade::MEDIO:
+                pontos += 20;
+                break;
+            case Dificuldade::FACIL:
+                pontos += 10;
+                break;
+        }
+        cout << "Pontos ganhos: " << pontos << std::endl;
+
+        // Atualiza pontuação e vitórias apenas se o jogador vencer
+        setPontuacao(getPontuacao() + pontos);
+        setVitorias(getVitorias() + 1);
     } else {
-        adicionarDerrota();
+        // Apenas incrementa derrotas em caso de perda
+        setDerrotas(getDerrotas() + 1);
     }
 
-    // Salva o jogador no arquivo após o resultado
-    salvarJogador();
-}
-
-void Jogador::salvarJogador() {
+    // Abrindo arquivo e lendo linhas para atualizar ou adicionar o jogador
     fstream arquivo("ranking.txt", ios::in | ios::out | ios::ate);
     vector<string> linhas;
     string linha;
@@ -70,24 +69,26 @@ void Jogador::salvarJogador() {
         // Se o jogador já está no arquivo, atualiza seus dados
         if (nomeArquivo == nome) {
             jogadorEncontrado = true;
-            linha = nome + " " + to_string(vitorias) + " " + to_string(derrotas) + " " + to_string(pontuacao);
+            linha = nome + " " + to_string(getVitorias()) + " " + to_string(getDerrotas()) + " " + to_string(getPontuacao());
         }
         linhas.push_back(linha);
     }
 
     // Se o jogador não foi encontrado, adiciona ao final
     if (!jogadorEncontrado) {
-        linha = nome + " " + to_string(vitorias) + " " + to_string(derrotas) + " " + to_string(pontuacao);
-        linhas.push_back(linha);
+        linhas.push_back(nome + " " + to_string(getVitorias()) + " " + to_string(getDerrotas()) + " " + to_string(getPontuacao()));
     }
 
-    // Fecha e reabre o arquivo para sobrescrever
+    // Fecha o arquivo e reabre para sobrescrever
     arquivo.close();
     ofstream arquivoSaida("ranking.txt");
     for (const auto& l : linhas) {
         arquivoSaida << l << endl;
     }
     arquivoSaida.close();
+
+    // Exibindo a pontuação atualizada para verificação
+    cout << "Pontuação atualizada: " << pontuacao << " pontos.\n";
 }
 
 void Jogador::salvarRanking() {
@@ -100,12 +101,4 @@ void Jogador::salvarRanking() {
     } else {
         cerr << "Erro ao abrir o arquivo de ranking.\n";
     }
-}
-
-void Jogador::adicionarVitoria() {
-    vitorias++;
-}
-
-void Jogador::adicionarDerrota() {
-    derrotas++;
 }
