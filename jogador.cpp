@@ -4,21 +4,25 @@
 #include <iostream>
 #include <vector>
 
+// Construtor
 Jogador::Jogador(string nome) : nome(nome), vitorias(0), derrotas(0), pontuacao(0) {}
 
 Jogador::Jogador(string nome, int vitorias, int derrotas, int pontuacao) 
     : nome(nome), vitorias(vitorias), derrotas(derrotas), pontuacao(pontuacao) {}
 
+// Getters
 string Jogador::getNome() const { return nome; }
 int Jogador::getVitorias() const { return vitorias; }
 int Jogador::getDerrotas() const { return derrotas; }
 int Jogador::getPontuacao() const { return pontuacao; }
 
+// Setters
 void Jogador::setNome(string nome) { this->nome = nome; }
 void Jogador::setVitorias(int v) { vitorias = v; }
 void Jogador::setDerrotas(int d) { derrotas = d; }
 void Jogador::setPontuacao(int p) { pontuacao = p; }
 
+// Atualizar a pontuação com base na dificuldade da partida
 void Jogador::adicionarPontuacao(int pontos) {
     pontuacao += pontos;
 }
@@ -36,6 +40,7 @@ void Jogador::carregarDadosDoRanking() {
         string nomeArquivo;
         int vit, der, pts;
 
+        // Carrega o jogador correspondente
         iss >> nomeArquivo >> vit >> der >> pts;
         if (nomeArquivo == nome) {
             vitorias = vit;
@@ -48,6 +53,7 @@ void Jogador::carregarDadosDoRanking() {
 }
 
 void Jogador::registrarResultado(Jogador& jogador, bool vitoria, Dificuldade dificuldade) {
+    // Chama a função para carregar os dados do jogador
     jogador.carregarDadosDoRanking();
 
     int pontos = 0;

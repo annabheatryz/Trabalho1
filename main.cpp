@@ -6,6 +6,7 @@
 using namespace std;
 
 int main() {
+    // Inicializa o jogo
     Jogo jogo;
 
     jogo.mostrarMenu();

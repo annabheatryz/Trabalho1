@@ -1,3 +1,4 @@
+// Dificuldade.h
 #ifndef DIFICULDADE_H
 #define DIFICULDADE_H
 
@@ -7,4 +8,4 @@ enum Dificuldade {
     DIFICIL
 };
 
-#endif
+#endif // DIFICULDADE_H

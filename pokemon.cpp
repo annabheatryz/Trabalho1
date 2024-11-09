@@ -6,10 +6,13 @@
 #include <iostream>
 #include <map>
 
+// Construtor padrão
 Pokemon::Pokemon() : nome(""), tipo1(""), tipo2(""), hp(0), hpInicial(0), nivel(0), ataque(0), defesa(0), velocidade(0), ataque_especial(0), defesa_especial(0) {}
 
+// Construtor com parâmetros
 Pokemon::Pokemon(const string& n, const string& tp1, const string& tp2, int hp, int nvl, int atq, int dfs, int v, int atq_especial, int dfs_especial) : nome(n), tipo1(tp1), tipo2(tp2), hp(hp), hpInicial(hp), nivel(nvl), ataque(atq), defesa(dfs), velocidade(v), ataque_especial(atq_especial), defesa_especial(dfs_especial) {}
 
+// Tabela de efetividade de tipos de Pokémon
 map<string, map<string, double>> efetividadeTabela = {
     {"Normal", {{"Normal", 1}, {"Fogo", 1}, {"Agua", 1}, {"Elétrico", 1}, {"Grama", 1}, {"Gelo", 1}, {"Lutador", 1}, {"Venenoso", 1}, {"Terrestre", 1}, {"Voador", 1}, {"Psíquico", 1}, {"Inseto", 1}, {"Rocha", 0.5}, {"Fantasma", 0}, {"Dragão", 1}, {"Metal", 0.5}, {"Fada", 1}}},
     {"Fogo", {{"Normal", 1}, {"Fogo", 0.5}, {"Agua", 0.5}, {"Elétrico", 1}, {"Grama", 2}, {"Gelo", 2}, {"Lutador", 1}, {"Venenoso", 1}, {"Terrestre", 1}, {"Voador", 1}, {"Psíquico", 1}, {"Inseto", 2}, {"Rocha", 0.5}, {"Fantasma", 1}, {"Dragão", 1}, {"Metal", 0.5}, {"Fada", 2}}},
@@ -30,6 +33,7 @@ map<string, map<string, double>> efetividadeTabela = {
     {"Fada", {{"Normal", 1}, {"Fogo", 1}, {"Agua", 1}, {"Elétrico", 1}, {"Grama", 1}, {"Gelo", 1}, {"Lutador", 1}, {"Venenoso", 1}, {"Terrestre", 1}, {"Voador", 1}, {"Psíquico", 1}, {"Inseto", 1}, {"Rocha", 1}, {"Fantasma", 1}, {"Dragão", 1}, {"Metal", 1}, {"Fada", 0.5}}}
 };
 
+// Getters
 string Pokemon::getNome() const {return nome;}
 string Pokemon::getTipo1() const {return tipo1;}
 string Pokemon::getTipo2() const {return tipo2;}
@@ -40,6 +44,7 @@ int Pokemon::getVelocidade() const {return velocidade;}
 int Pokemon::getAtaqueEspecial() const {return ataque_especial;}
 int Pokemon::getDefesaEspecial() const {return defesa_especial;}
 
+// Setters
 void Pokemon::setHP(int hp) {this -> hp = hp;}
 void Pokemon::setNivel(int nvl) {nivel = nvl;}
 void Pokemon::setAtaque(int atq) {ataque = atq;}
@@ -50,14 +55,16 @@ void Pokemon::setDefesaEspecial(int dfs_especial) {defesa_especial = dfs_especia
 
 
 int Pokemon::calcularDano(Ataque& ataque, const Pokemon& defensor) {
+    // Verifica se o ataque acerta com base na precisão
     float sorteioPrecisao = static_cast<float>(rand() % 100 + 1) / 100.0;
     if (sorteioPrecisao > ataque.getPrecisao()) {
         cout << "O ataque falhou!\n";
-        return 0;
+        return 0;  // Ataque falhou
     }
 
     int A, D;
 
+    // Define stats de ataque e defesa com base no tipo do ataque
     if (ataque.isFisico()) {
         A = ataque.getPoder();
         D = defensor.defesa;
@@ -71,12 +78,15 @@ int Pokemon::calcularDano(Ataque& ataque, const Pokemon& defensor) {
     if (A == 0) A = 10;
     if (D == 0) D = 10;
 
+    // Fator crítico
     float critico = (rand() % 16 == 0) ? 2 : 1;
     if (critico == 2) cout << "Foi um golpe crítico!\n";
 
+    // Bônus de mesmo tipo
     float stab = (ataque.getTipo() == tipo1 || ataque.getTipo() == tipo2) ? 1.5 : 1;
     cout << "STAB: " << stab << endl;
 
+    // Efetividade do tipo contra os tipos do defensor
     float tp1 = 1.0, tp2 = 1.0;
     if (efetividadeTabela.find(ataque.getTipo()) != efetividadeTabela.end()) {
         if (efetividadeTabela[ataque.getTipo()].find(defensor.getTipo1()) != efetividadeTabela[ataque.getTipo()].end()) {
@@ -94,17 +104,35 @@ int Pokemon::calcularDano(Ataque& ataque, const Pokemon& defensor) {
         return 0;
     }
 
+    // Fator aleatório
     float random = (rand() % (255 - 217 + 1) + 217) / 255.0;
     cout << "Fator aleatório: " << random << endl;
 
+    // Cálculo final do dano
     int dano = ((2 * nivel * ataque.getPoder() * A / D) / 50 + 2) * critico * stab * tp1 * tp2 * random;
     cout << "Dano final causado: " << dano << endl;
 
     return dano;
 }
 
+// Função para calcular multiplicadores (vantagem de tipos)
+float Pokemon::calcularMultiplicador(const Ataque& ataque, const Pokemon& defensor) {
+    float multiplicador = 1.0f;
+
+    // Exemplo de vantagem/desvantagem de tipos
+    if (ataque.getTipo() == "Fogo" && (defensor.getTipo1() == "Grama" || defensor.getTipo2() == "Grama")) {
+        multiplicador = 2.0f;  // Super eficaz
+    } else if (ataque.getTipo() == "Fogo" && (defensor.getTipo1() == "Água" || defensor.getTipo2() == "Água")) {
+        multiplicador = 0.5f;  // Não muito eficaz
+    }
+
+    // Exibir o multiplicador
+    cout << "Multiplicador de tipo: " << multiplicador << "\n";
+    return multiplicador;
+}
+
 Ataque Pokemon::getAtaque(int i) const {
-    return ataques.at(i); 
+    return ataques.at(i);  // Retorna o ataque no índice especificado, com verificação de limites
 }
 
 int Pokemon::getTotalAtaques() const {
@@ -116,21 +144,21 @@ void Pokemon::adicionarAtaque(const Ataque& ataque) {
 }
 
 void Pokemon::reduzirHP(int dano) {
-    hp -= dano;
+    hp -= dano;  // Subtrai o dano do HP atual
     if (hp < 0){
-        hp = 0;
+        hp = 0;  // HP não pode ser negativo
         cout << getNome() << " recebeu " << dano << " de dano! HP restante: " << getHP() << endl;
     }
 }
 
 void Pokemon::limparAtaques() {
-    ataques.clear();
+    ataques.clear(); // Limpa todos os ataques armazenados no vetor
 }
 
 void Pokemon::limparPokemons() {
-    pokemons.clear();
+    pokemons.clear(); // Limpa todos os pokémon armazenados no vetor
 }
 
 void Pokemon::resetarHP() {
-    hp = hpInicial;
+    hp = hpInicial;  // Restaura o HP inicial do Pokémon
 }
