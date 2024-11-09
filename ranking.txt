@@ -1,8 +1,0 @@
-Anna 20 3 30
-nome 7 0 10
-joao 2 0 0
-maria 2 0 10AAA 0 0 0
-nome1 1 0 10
-Natalia 3 1 0
-Bruna 2 0 0
-bruna 0 2 0
