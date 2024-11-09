@@ -13,7 +13,7 @@ using namespace std;
 class Jogador {
 private:
     string nome;
-    Dificuldade dificuldade;
+    string dificuldade;
     int vitorias = 0;
     int derrotas = 0;
     int pontuacao = 0;
@@ -21,13 +21,11 @@ public:
     Jogador(string nome = "");
     Jogador(string nome, int vitorias, int derrotas, int pontos);
    
-    //Getters
     string getNome() const;
     int getVitorias() const;
     int getDerrotas() const;
     int getPontuacao() const; 
 
-    //Setters
     void setNome(string nome);
     void setVitorias(int v);
     void setDerrotas(int d);
@@ -36,11 +34,8 @@ public:
 
     void adicionarPontuacao(int pontos);
     void registrarResultado(Jogador& jogador, bool vitoria, Dificuldade dificuldade);
-    void salvarJogador();
     void salvarRanking();
-    void adicionarDerrota();
-    void adicionarVitoria();
-
+    void carregarDadosDoRanking();
 };
 
 #endif
