@@ -345,7 +345,6 @@ void Jogo::sortearPokemons() {
     }
 }
 
-
 void Jogo::distribuirAtaques(Pokemon& pokemon) {
     vector<Ataque> ataquesValidos;
     vector<Ataque> ataquesNormais;

@@ -14,7 +14,7 @@ Ataque::Ataque(const string& mv, bool f, int pw, float pc, const string& t) : mo
 
 string Ataque::getMove() const { return move; }
 bool Ataque::isFisico() const { return fisico; }
-string Ataque::getTipo() const { return ipo; }
+string Ataque::getTipo() const { return tipo; }
 int Ataque::getPoder() const { return poder; }
 float Ataque::getPrecisao() const { return precisao; }
 
