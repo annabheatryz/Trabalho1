@@ -68,11 +68,11 @@ int Pokemon::calcularDano(Ataque& ataque, const Pokemon& defensor) {
     if (ataque.isFisico()) {
         A = ataque.getPoder();
         D = defensor.defesa;
-        cout << "Ataque físico: " << A << " vs Defesa física: " << D << endl;
+        cout << "\nAtaque físico: " << A << " vs Defesa física: " << D << endl;
     } else {
         A = ataque_especial;
         D = defensor.defesa_especial;
-        cout << "Ataque especial: " << A << " vs Defesa especial: " << D << endl;
+        cout << "\nAtaque especial: " << A << " vs Defesa especial: " << D << endl;
     }
 
     if (A == 0) A = 10;
@@ -84,7 +84,7 @@ int Pokemon::calcularDano(Ataque& ataque, const Pokemon& defensor) {
 
     // Bônus de mesmo tipo
     float stab = (ataque.getTipo() == tipo1 || ataque.getTipo() == tipo2) ? 1.5 : 1;
-    cout << "STAB: " << stab << endl;
+    cout << "\nSTAB: " << stab << endl;
 
     // Efetividade do tipo contra os tipos do defensor
     float tp1 = 1.0, tp2 = 1.0;
@@ -97,20 +97,20 @@ int Pokemon::calcularDano(Ataque& ataque, const Pokemon& defensor) {
         }
     }
 
-    cout << "Efetividade de tipo: tipo 1 = " << tp1 << ", tipo 2 = " << tp2 << endl;
+    cout << "\nEfetividade de tipo: tipo 1 = " << tp1 << ", tipo 2 = " << tp2 << endl;
 
     if (tp1 == 0 || tp2 == 0) {
-        cout << "O ataque não é efetivo!\n";
+        cout << "\nO ataque não é efetivo!\n";
         return 0;
     }
 
     // Fator aleatório
     float random = (rand() % (255 - 217 + 1) + 217) / 255.0;
-    cout << "Fator aleatório: " << random << endl;
+    cout << "\nFator aleatório: " << random << endl;
 
     // Cálculo final do dano
     int dano = ((2 * nivel * ataque.getPoder() * A / D) / 50 + 2) * critico * stab * tp1 * tp2 * random;
-    cout << "Dano final causado: " << dano << endl;
+    cout << "\nDano final causado: " << dano << endl;
 
     return dano;
 }

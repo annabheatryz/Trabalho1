@@ -88,10 +88,10 @@ Jogador Jogo::selecionarJogador() {
                       [&nomeJogador](const Jogador& j) { return j.getNome() == nomeJogador; });
 
     if (it != jogadores.end()) {
-        cout << "Bem-vindo de volta, " << nomeJogador << "!\n";
+        cout << "\nBem-vindo de volta, " << nomeJogador << "!\n\n";
         return *it;  // Retorna o jogador já existente
     } else {
-        cout << "Novo jogador criado: " << nomeJogador << "!\n";
+        cout << "\nNovo jogador criado: " << nomeJogador << "!\n";
         Jogador novoJogador(nomeJogador);
         jogadores.push_back(novoJogador);  // Adiciona à lista interna
 
@@ -146,7 +146,7 @@ void Jogo::iniciarBatalha(Jogador& jogador, Dificuldade dificuldade) {
     atual_cpu = &escolherPokemonCPU();
 
     // Imprimir o Pokémon da CPU selecionado e seu HP inicial
-    cout << "A CPU escolheu: " << atual_cpu->getNome() << " com " << atual_cpu->getHP() << " HP.\n";
+    cout << "\nA CPU escolheu: " << atual_cpu->getNome() << " com " << atual_cpu->getHP() << " HP.\n";
 
     // Loop da batalha
     while (true) {
@@ -155,7 +155,7 @@ void Jogo::iniciarBatalha(Jogador& jogador, Dificuldade dificuldade) {
 
         // Verifica se o Pokémon da CPU foi nocauteado
         if (atual_cpu->getHP() <= 0) {
-            cout << atual_cpu->getNome() << " da CPU foi nocauteado!\n";
+            cout << "\n" << atual_cpu->getNome() << " da CPU foi nocauteado!\n";
             
             // Verifica se a CPU tem outros Pokémon disponíveis
             bool algumPokemonCPUDisponivel = any_of(pokemons_cpu.begin(), pokemons_cpu.end(), [](Pokemon* p) {
@@ -163,11 +163,11 @@ void Jogo::iniciarBatalha(Jogador& jogador, Dificuldade dificuldade) {
             });
 
             if (algumPokemonCPUDisponivel) {
-                cout << "A CPU está escolhendo outro Pokémon...\n";
+                cout << "\nA CPU está escolhendo outro Pokémon...\n";
                 atual_cpu = &escolherPokemonCPU();  // CPU escolhe outro Pokémon
-                cout << "A CPU escolheu: " << atual_cpu->getNome() << " com " << atual_cpu->getHP() << " HP.\n";
+                cout << "\nA CPU escolheu: " << atual_cpu->getNome() << " com " << atual_cpu->getHP() << " HP.\n";
             } else {
-                cout << "Você venceu a batalha!\n";
+                cout << "\nVocê venceu a batalha!\n";
                 jogador.registrarResultado(jogador, true, dificuldade);
                 break;  // Sai do loop se todos os Pokémon da CPU foram nocauteados
             }
@@ -196,7 +196,7 @@ void Jogo::iniciarBatalha(Jogador& jogador, Dificuldade dificuldade) {
         
         // Checa se o jogador deseja trocar de Pokémon após cada turno
         exibirStatus(jogador_atual, atual_cpu);
-        cout << "Deseja trocar de Pokémon? (s/n): ";
+        cout << "\nDeseja trocar de Pokémon? (s/n):\n ";
         cin >> trocar;
 
         if (trocar == 's' || trocar == 'S') {
@@ -475,11 +475,11 @@ void Jogo::turnoCPU(Pokemon* atacante, Pokemon* defensor) {
         return;
     }
 
-    cout << "CPU usou " << ataqueEscolhido.getMove() << " causando " << dano << " de dano!\n";
+    cout << "\nCPU usou " << ataqueEscolhido.getMove() << " causando " << dano << " de dano!\n";
 }
 
 void Jogo::exibirStatus(const Pokemon* p1, const Pokemon* p2) const {
-    cout << p1->getNome() << " HP: " << p1->getHP() << " | " << p2->getNome() << " HP: " << p2->getHP() << endl;
+    cout << "\n" << p1->getNome() << " HP: " << p1->getHP() << " | " << p2->getNome() << " HP: " << p2->getHP() << endl;
 }
 
 void Jogo::exibirPokemons() {
